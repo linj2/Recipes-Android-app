@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(),
 
         //set main fragment as default page
         if (savedInstanceState == null) {
-            val fragment = MainFragment()
+            val fragment = HomeFragment()
             val ft = supportFragmentManager.beginTransaction()
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(),
         var switchTo: Fragment? = null
         when (item.itemId) {
             R.id.nav_home-> {
-                switchTo = MainFragment()
+                switchTo = HomeFragment()
             }
             R.id.nav_favorite -> {
                 switchTo = FavoriteFragment()
