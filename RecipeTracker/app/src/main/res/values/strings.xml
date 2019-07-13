@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Recipe Tracker</string>
+    <string name="favorites">Favorites</string>
+    <string name="popular">Popular</string>
+    <string name="my_recipes">My Recipes</string>
+    <string name="search_recipes">Search Recipes</string>
 </resources>
