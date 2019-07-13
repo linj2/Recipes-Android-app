@@ -42,4 +42,14 @@
             android:text="@string/popular"
             android:layout_alignBottom="@+id/button_my_favorites"
             android:layout_alignStart="@id/button_my_recipes"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:menu="@menu/bottom_nav_menu"
+            android:layout_alignParentBottom="true"
+    />
+
 </RelativeLayout>

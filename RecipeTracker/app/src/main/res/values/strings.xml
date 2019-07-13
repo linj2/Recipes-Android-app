@@ -4,4 +4,6 @@
     <string name="popular">Popular</string>
     <string name="my_recipes">My Recipes</string>
     <string name="search_recipes">Search Recipes</string>
+    <string name="title_home">Home</string>
+    <string name="title_me">Me</string>
 </resources>
