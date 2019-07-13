@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+>
+    <Button
+            android:id="@+id/button_search"
+            android:layout_width="@dimen/home_button_size"
+            android:layout_height="@dimen/home_button_size"
+            android:layout_marginStart="50dp"
+            android:text="@string/search_recipes"
+            android:layout_marginTop="120dp" />
+
+    <Button
+            android:id="@+id/button_my_recipes"
+            android:layout_width="@dimen/home_button_size"
+            android:layout_height="@dimen/home_button_size"
+            android:layout_alignBottom="@+id/button_search"
+            android:layout_alignTop="@id/button_search"
+            android:layout_toEndOf="@id/button_search"
+            android:text="@string/my_recipes"
+    />
+
+    <Button
+            android:id="@+id/button_my_favorites"
+            android:layout_width="@dimen/home_button_size"
+            android:layout_height="@dimen/home_button_size"
+            android:layout_alignStart="@+id/button_search"
+            android:layout_below="@id/button_search"
+            android:layout_marginEnd="50dp"
+            android:text="@string/favorites" />
+
+    <Button
+            android:id="@+id/button_popular"
+            android:layout_width="@dimen/home_button_size"
+            android:layout_height="@dimen/home_button_size"
+            android:layout_alignEnd="@id/button_my_recipes"
+            android:text="@string/popular"
+            android:layout_alignBottom="@+id/button_my_favorites"
+            android:layout_alignStart="@id/button_my_recipes"/>
+</RelativeLayout>

@@ -8,13 +8,15 @@
     />
 
     <item
-            android:id="@+id/nav_teams"
-            android:icon="@drawable/ic_me"
-            android:title="@string/title_me"/>
-
-    <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite"
             android:title="@string/favorites"
     />
+
+    <item
+            android:id="@+id/nav_teams"
+            android:icon="@drawable/ic_me"
+            android:title="@string/title_me"/>
+
+
 </menu>
