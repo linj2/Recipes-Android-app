@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.fragment_me.*
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener
@@ -25,7 +26,6 @@ class MainActivity : AppCompatActivity(),
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
         }
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
