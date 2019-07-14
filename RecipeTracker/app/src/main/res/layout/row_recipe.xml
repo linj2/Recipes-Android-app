@@ -17,10 +17,10 @@
             android:background="@color/colorBackground"
     >
         <TextView
-                android:id="@+id/food_text_view"
+                android:id="@+id/title_recipe"
                 android:textSize="24sp"
-                android:text=""
-                android:layout_marginLeft="8dp"
+                android:text="@string/recipe_title"
+                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
         />

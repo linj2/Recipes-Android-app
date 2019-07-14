@@ -22,16 +22,44 @@ class HomeFragment:Fragment() {
         //TODO: I was testing something and forgot to change it back.
         buttonSearch?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content), "search clicked", Snackbar.LENGTH_SHORT).show()
+            val switchTo = SearchFragment()
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, switchTo)
+            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+                activity!!.supportFragmentManager.popBackStackImmediate()
+            }
+            ft.commit()
         }
 
         buttonMyFavorites?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content),"favorite clicked",Snackbar.LENGTH_SHORT).show()
+            val switchTo = FavoriteFragment()
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, switchTo)
+            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+                activity!!.supportFragmentManager.popBackStackImmediate()
+            }
+            ft.commit()
         }
         buttonMyRecipes?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content),"my recipes clicked",Snackbar.LENGTH_SHORT).show()
+            val switchTo = MeFragment()
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, switchTo)
+            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+                activity!!.supportFragmentManager.popBackStackImmediate()
+            }
+            ft.commit()
         }
         buttonPopular?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content),"popular clicked",Snackbar.LENGTH_SHORT).show()
+            val switchTo = PopularFragment()
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, switchTo)
+            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+                activity!!.supportFragmentManager.popBackStackImmediate()
+            }
+            ft.commit()
         }
         return view
     }
