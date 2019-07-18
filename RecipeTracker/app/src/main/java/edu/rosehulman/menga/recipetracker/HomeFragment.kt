@@ -28,6 +28,7 @@ class HomeFragment:Fragment() {
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
                 activity!!.supportFragmentManager.popBackStackImmediate()
             }
+            ft.addToBackStack(Constants.SEARCH)
             ft.commit()
         }
 
@@ -39,6 +40,7 @@ class HomeFragment:Fragment() {
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
                 activity!!.supportFragmentManager.popBackStackImmediate()
             }
+            ft.addToBackStack(Constants.FAVORITE)
             ft.commit()
         }
         buttonMyRecipes?.setOnClickListener {
@@ -49,6 +51,7 @@ class HomeFragment:Fragment() {
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
                 activity!!.supportFragmentManager.popBackStackImmediate()
             }
+            ft.addToBackStack(Constants.MY_RECIPES)
             ft.commit()
         }
         buttonPopular?.setOnClickListener {
@@ -59,6 +62,7 @@ class HomeFragment:Fragment() {
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
                 activity!!.supportFragmentManager.popBackStackImmediate()
             }
+            ft.addToBackStack(Constants.POPULAR)
             ft.commit()
         }
         return view
