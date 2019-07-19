@@ -6,4 +6,10 @@
     <string name="search_recipes">Search Recipes</string>
     <string name="title_home">Home</string>
     <string name="title_me">Me</string>
+    <string name="search_hint">Search</string>
+    <string name="string_return">Back</string>
+    <string name="recipe_title">Recipe Title</string>
+    <string name="add_a_recipe">Add a Recipe</string>
+    <string name="my_recipes_title">My Recipes</string>
+    <string name="popular_string">Popular Recipes</string>
 </resources>
