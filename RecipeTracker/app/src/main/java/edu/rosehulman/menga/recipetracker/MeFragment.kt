@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
+import android.widget.EditText
+import android.widget.RelativeLayout
+import android.widget.ScrollView
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.fragment_me.view.*
 
@@ -15,6 +18,7 @@ class MeFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_me,container,false)
+
         view.button_return.setOnClickListener {
             val switchTo = HomeFragment()
             val ft = activity!!.supportFragmentManager.beginTransaction()
@@ -32,19 +36,52 @@ class MeFragment: Fragment() {
         view.button_add_recipe.setOnClickListener {
             //TODO: get a new Recipe and add it in the adapter
             val builder = AlertDialog.Builder(context!!)
+            var editTextIds = ArrayList<Int>()
             // Set options
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
             builder.setView(view)
-            builder.setPositiveButton(android.R.string.ok) {_, _ ->
-                val title = view.recipe_edit_title.text.toString()
-                val ingredients = view.ingredients_edit_text.text.toString()
-                val instructions = view.instructions_edit_text.text.toString()
-                val ingredientList = toIngredientList(ingredients)
-                val recipe = Recipe(title, ingredientList, instructions)
-                adapter.add(recipe)
-            }
+            builder.setPositiveButton(android.R.string.ok, null)
+            builder.setNeutralButton("+", null)
             builder.setNegativeButton(android.R.string.cancel, null)
-            builder.create().show()
+            val titleEditText = view.findViewById<EditText>(R.id.edit_title)
+            val dialog = builder.create()
+            var lastID = R.id.ingredients_edit_text
+            editTextIds.add(lastID)
+            dialog.setOnShowListener {
+                val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+                val layout = view.findViewById<RelativeLayout>(R.id.edit_recipe_layout)
+                neutralButton.setOnClickListener {
+                    var nextEditText = EditText(context)
+                    nextEditText.id = View.generateViewId()
+                    nextEditText.hint = context!!.resources.getString(R.string.ingredient)
+                    val layoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    layoutParams.addRule(RelativeLayout.ALIGN_END, lastID)
+                    layoutParams.addRule(RelativeLayout.ALIGN_START, lastID)
+                    layoutParams.addRule(RelativeLayout.BELOW, lastID)
+                    lastID = nextEditText.id
+                    nextEditText.layoutParams = layoutParams
+                    layout.addView(nextEditText)
+                    editTextIds.add(lastID)
+                }
+                val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                positiveButton.setOnClickListener {dialogView: View ->
+                    val title = view.edit_title.text.toString()
+                    val instructions = view.instructions_edit_text.text.toString()
+                    val ingredientList = ArrayList<String>()
+                    for(id in editTextIds) {
+                        val ingredient = view.findViewById<EditText>(id).text.toString()
+                        ingredientList.add(ingredient)
+                    }
+                    val recipe = Recipe(title, ingredientList, instructions)
+                    adapter.add(recipe)
+                    it.dismiss()
+                }
+                val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                negativeButton.setOnClickListener {dialogView: View ->
+                    it.dismiss()
+                }
+            }
+            dialog.show()
         }
         return view
     }

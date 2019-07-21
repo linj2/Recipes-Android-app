@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recipe Name"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/recipe_edit_title"
-            android:gravity="center_horizontal"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"
-    />
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_me"
-            android:layout_below="@id/recipe_edit_title"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="Placeholder for recipe image"
-            android:id="@+id/recipe_image"
-    />
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ingredients"
-            android:id="@+id/ingredients_edit_text"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/recipe_image"
-            android:contentDescription="may be replaced with recycler view holding ingredients - may want to wait on that"
-    />
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/instructions_edit_text"
-            android:layout_centerHorizontal="true"
-            android:text="Instructions"
-            android:layout_below="@+id/ingredients_edit_text"
-            android:contentDescription="may want to change to recycler view or something which permits scrolling if this doesn't"
-    />
-</RelativeLayout>
+<ScrollView
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:scrollbars="vertical"
+        android:layout_width="wrap_content">
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:id="@+id/edit_recipe_layout"
+        android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_name"
+                android:id="@+id/edit_title"
+                android:gravity="center_horizontal"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+        />
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_me"
+                android:layout_below="@+id/edit_title"
+                android:contentDescription="Placeholder for recipe image"
+                android:id="@+id/recipe_image"
+        />
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/instructions"
+                android:layout_alignStart="@+id/edit_title"
+                android:layout_alignEnd="@+id/edit_title"
+                android:layout_below="@+id/recipe_image"
+                android:id="@+id/instructions_edit_text"
+                android:contentDescription="may be replaced with recycler view holding ingredients - may want to wait on that"
+        />
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ingredients_edit_text"
+                android:layout_alignStart="@+id/instructions_edit_text"
+                android:layout_alignEnd="@+id/instructions_edit_text"
+                android:hint="@string/ingredient"
+                android:layout_below="@+id/instructions_edit_text"
+                android:contentDescription="may want to change to recycler view or something which permits scrolling if this doesn't"
+        />
+    </RelativeLayout>
+</ScrollView>
