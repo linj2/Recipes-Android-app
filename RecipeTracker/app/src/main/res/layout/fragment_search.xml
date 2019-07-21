@@ -17,6 +17,15 @@
             android:id="@+id/button_return"
             android:layout_alignParentEnd="true"
     />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_execute_search"
+            android:layout_alignTop="@+id/button_return"
+            android:layout_alignBottom="@id/button_return"
+            android:layout_alignParentLeft="true"
+            android:text="@string/search"
+    />
     <android.support.v7.widget.RecyclerView
             android:layout_below="@+id/button_return"
             android:id="@+id/recycler_view"
@@ -28,7 +37,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:showIn="@layout/activity_main"
             android:padding="8dp"
-            android:background="@color/colorBackground"
             tools:context=".MainActivity">
     </android.support.v7.widget.RecyclerView>
 

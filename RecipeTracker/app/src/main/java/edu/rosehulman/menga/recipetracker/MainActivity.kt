@@ -6,14 +6,39 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.widget.Toast
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_me.*
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener
 {
+    val collection = FirebaseFirestore.getInstance().collection("collection")
+
+
+    fun testFirestore(): String {
+        var str = "didn't work"
+        FirebaseFirestore.getInstance().collection("collection")
+            .addSnapshotListener { snapshot, firebaseFirestoreException ->
+                if(firebaseFirestoreException != null) {
+                    return@addSnapshotListener
+                }
+                for(docChange in snapshot!!.documents) {
+                    Toast.makeText(this, docChange.getString("str"), Toast.LENGTH_SHORT).show()
+                }
+            }
+        return str
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        FirebaseApp.initializeApp(this)
+        val str = testFirestore()
+
 
         //add selected listener for bottom navigation view
         val navView: BottomNavigationView = findViewById(R.id.nav_view)

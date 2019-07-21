@@ -19,6 +19,12 @@ class SearchFragment: Fragment() {
             }
             ft.commit()
         }
+        view.button_execute_search.setOnClickListener {
+            val query = view.edit_text_search.text.toString()
+            //TODO: execute search and add all of them to an adapter (not created yet)
+            //may need to research search algorithms
+            view.recycler_view.setBackgroundColor(resources.getColor(R.color.colorBackground))
+        }
         return view
     }
 }

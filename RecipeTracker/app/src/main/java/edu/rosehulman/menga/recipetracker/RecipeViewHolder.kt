@@ -11,7 +11,7 @@ class RecipeViewHolder: RecyclerView.ViewHolder {
     constructor(itemView: View, adapter: RecipeAdapter, context: Context): super(itemView) {
         this.context = context
         itemView.setOnClickListener {
-
+            adapter.showRecipe(adapterPosition)
         }
         itemView.setOnLongClickListener {
             true

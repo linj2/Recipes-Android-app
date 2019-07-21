@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="edu.rosehulman.menga.photobucket.MainActivity">
+    <item
+        android:id="@+id/settings"
+        android:title="settings"
+        android:orderInCategory="50"
+        app:showAsAction="never"
+    />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Log out"
+        android:orderInCategory="75"
+        app:showAsAction="never"
+    />
+</menu>

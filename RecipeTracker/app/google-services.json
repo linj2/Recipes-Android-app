@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1067787462844",
+    "firebase_url": "https://recipetracker-79fa9.firebaseio.com",
+    "project_id": "recipetracker-79fa9",
+    "storage_bucket": "recipetracker-79fa9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067787462844:android:531b2220cb6c8d60",
+        "android_client_info": {
+          "package_name": "edu.rosehulman.menga.recipetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067787462844-94gd9p59ltkrgm4a9k8iamb2d6cjgle5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.rosehulman.menga.recipetracker",
+            "certificate_hash": "3dd68ceab2e67788884b6f2d56f5fba9991749e5"
+          }
+        },
+        {
+          "client_id": "1067787462844-v14mlohjrd69h5gjnh9l89jmivmpv5l2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMQayLHImbk_yMWMGEISNsO1DxQXCiTVU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067787462844-v14mlohjrd69h5gjnh9l89jmivmpv5l2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1067787462844-aa26dhr6npso7s6uqc53a0sjfhs1ph5k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "edu.rosehulman.menga.recipetracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
