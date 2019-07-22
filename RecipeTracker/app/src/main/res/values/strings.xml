@@ -16,4 +16,5 @@
     <string name="instructions">Instructions</string>
     <string name="recipe_name">Recipe Name</string>
     <string name="ingredient">Ingredient</string>
+    <string name="dialog_edit_title">Edit the comment</string>
 </resources>

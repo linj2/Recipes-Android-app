@@ -1,3 +1,3 @@
 package edu.rosehulman.menga.recipetracker
 
-data class Comment(var content: String, val user: String)
+data class Comment(var content: String, val user: String,val uid:String)
