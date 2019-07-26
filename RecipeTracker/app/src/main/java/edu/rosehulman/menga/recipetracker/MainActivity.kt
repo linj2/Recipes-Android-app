@@ -4,19 +4,27 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.Toast
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_me.*
 
 class MainActivity : AppCompatActivity(),
-    BottomNavigationView.OnNavigationItemSelectedListener
+    BottomNavigationView.OnNavigationItemSelectedListener,
+    SplashFragment.OnLoginButtonPressedListener
 {
     val collection = FirebaseFirestore.getInstance().collection("collection")
 
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    var uid :String = ""
+    lateinit var authStateListener: FirebaseAuth.AuthStateListener
+    // Request code for launching the sign in Intent.
+    private val RC_SIGN_IN = 1
 
     fun testFirestore(): String {
         var str = "didn't work"
@@ -36,9 +44,10 @@ class MainActivity : AppCompatActivity(),
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initializeListeners()
+
         FirebaseApp.initializeApp(this)
         val str = testFirestore()
-
 
         //add selected listener for bottom navigation view
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -93,6 +102,69 @@ class MainActivity : AppCompatActivity(),
 
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    //rest of it just go log in page
+    override fun onStart() {
+        super.onStart()
+        auth.addAuthStateListener(authStateListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        auth.removeAuthStateListener(authStateListener)
+    }
+
+    private fun initializeListeners() {
+        authStateListener = FirebaseAuth.AuthStateListener { auth: FirebaseAuth ->
+            val user = auth.currentUser
+            Log.d(Constants.TAG, "In auth listener, user = $user")
+            if (user != null) {
+                Log.d(Constants.TAG, "UID: ${user.uid}")
+                Log.d(Constants.TAG, "Name: ${user.displayName}")
+                Log.d(Constants.TAG, "Email: ${user.email}")
+                Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
+                Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
+                uid = user.uid
+                switchToHomeFragment()
+            } else {
+                switchToSplashFragment()
+            }
+        }
+    }
+
+    private fun switchToSplashFragment() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, SplashFragment())
+        ft.commit()
+    }
+
+    //TODO: might need uid for myRecipe fragment
+    private fun switchToHomeFragment() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, HomeFragment())
+        ft.commitAllowingStateLoss()
+    }
+
+    override fun onLoginButtonPressed() {
+        launchLoginUI()
+    }
+
+    private fun launchLoginUI() {
+        // Choose authentication providers
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.PhoneBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+        val loginIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .setLogo(R.mipmap.ic_launcher_custom)
+            .build()
+
+        // Create and launch sign-in intent
+        startActivityForResult(loginIntent, RC_SIGN_IN)
     }
 }
 
