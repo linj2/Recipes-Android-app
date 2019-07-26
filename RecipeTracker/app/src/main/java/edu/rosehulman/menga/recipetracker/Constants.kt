@@ -7,4 +7,5 @@ object Constants {
     const val POPULAR = "popular"
     const val SEARCH = "search"
     const val FAVORITE = "favorite"
+    const val RECIPES_PATH = "recipes"
 }
