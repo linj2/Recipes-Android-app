@@ -62,7 +62,7 @@ class MeFragment: Fragment() {
             }
             ft.commit()
         }
-        adapter = RecipeAdapter(context!!, listener!!,  "")
+        adapter = RecipeAdapter(context!!, listener!!,  uid!!)
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
         view.recycler_view.setHasFixedSize(true)
@@ -99,14 +99,14 @@ class MeFragment: Fragment() {
                 }
                 val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 positiveButton.setOnClickListener {dialogView: View ->
-                    val title = view.edit_title.text.toString()
+                    val title =titleEditText.text.toString()
                     val instructions = view.instructions_edit_text.text.toString()
                     val ingredientList = ArrayList<String>()
                     for(id in editTextIds) {
                         val ingredient = view.findViewById<EditText>(id).text.toString()
                         ingredientList.add(ingredient)
                     }
-                    val recipe = Recipe(title, ingredientList, instructions)
+                    val recipe = Recipe(title, ingredientList, instructions, uid!!)
                     adapter.add(recipe)
                     it.dismiss()
                 }

@@ -13,15 +13,30 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
         .getInstance()
         .collection(Constants.RECIPES_PATH)
 
+    private fun update() {
+        recipeRef
+            //.whereEqualTo("uid", uid).orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).get()
+            .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).whereEqualTo("uid", uid).get()
+            .addOnSuccessListener {
+            recipes.clear()
+            for(doc in it.documents) {
+                val recipe = Recipe.fromSnapshot(doc)
+                recipes.add(recipe)
+            }
+            notifyDataSetChanged()
+        }
+    }
+
     init {
-        //TODO: add argument to check user for my recipes
+        update()
 //        if(mine){
 //            query = picRef.whereEqualTo("recipe", recipe)
 //        }else{
 //            query = picRef.orderBy(Recipe.CREATION_KEY, Query.Direction.ASCENDING)
 //        }
         recipeRef
-            .orderBy(Recipe.CREATION_KEY, Query.Direction.ASCENDING)
+            .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING)
+            .whereEqualTo("uid", uid)
             .addSnapshotListener { snapshot: QuerySnapshot?, exception: FirebaseFirestoreException? ->
             if (exception != null) {
                 Log.e(Constants.TAG, "Listen error: $exception")
@@ -66,7 +81,6 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
         holder.bind(recipes[index])
     }
 
-    //TODO: add these to the backend
     //the username will be tracked in the recipe object
     fun add(recipe: Recipe) {
         recipeRef.add(recipe)

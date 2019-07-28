@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Recipe(var title: String = "",
                   var ingredients: ArrayList<String> = ArrayList(),
-                  var instructions: String = ""):Parcelable {
+                  var instructions: String = "", val uid: String = ""):Parcelable {
 
     @get:Exclude
     var id =""
