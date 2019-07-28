@@ -6,12 +6,14 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.KeyEvent
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity(),
         initializeListeners()
 
         FirebaseApp.initializeApp(this)
-        val str = testFirestore()
+        testFirestore()
 
         //add selected listener for bottom navigation view
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -59,10 +61,11 @@ class MainActivity : AppCompatActivity(),
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
         }
+        setSupportActionBar(toolbar)
     }
 
     override fun showRecipe(recipe: Recipe) {
-        val fragment = RecipeFragment.newInstance(recipe, "Me")
+        val fragment = RecipeFragment.newInstance(recipe, Constants.MY_RECIPES)
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, fragment).addToBackStack("recipe").commit()
     }
@@ -137,6 +140,31 @@ class MainActivity : AppCompatActivity(),
                 switchToHomeFragment(user.uid)
             } else {
                 switchToSplashFragment()
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //return super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                // User chose the "Settings" item, show the app settings UI...
+                if(uid == "") {
+                    Toast.makeText(this, "Already logged out", Toast.LENGTH_SHORT).show()
+                }
+                else auth.signOut()
+                true
+            }
+
+            else -> {
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                super.onOptionsItemSelected(item)
             }
         }
     }

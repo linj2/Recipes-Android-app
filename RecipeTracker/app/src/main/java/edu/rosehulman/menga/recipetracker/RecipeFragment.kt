@@ -22,6 +22,22 @@ class RecipeFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.recipe_view, container, false)
         view.recipe_view_title.text = recipe?.title
+        view.button_return.setOnClickListener {
+            when(previous) {
+                Constants.MY_RECIPES -> {
+
+                }
+                Constants.POPULAR -> {
+
+                }
+                Constants.FAVORITE -> {
+
+                }
+                Constants.SEARCH -> {
+
+                }
+            }
+        }
         return view
     }
 
