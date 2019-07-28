@@ -11,6 +11,24 @@ import android.widget.Button
 import android.widget.Toast
 
 class HomeFragment:Fragment() {
+    private var uid: String? = null
+
+    companion object {
+        fun newInstance(uid: String) =
+            HomeFragment().apply {
+                arguments = Bundle().apply {
+                    putString(Constants.ARG_UID, uid)
+                }
+            }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments.let {
+            uid = it?.getString(Constants.ARG_UID)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home,container,false)
 
@@ -34,7 +52,7 @@ class HomeFragment:Fragment() {
 
         buttonMyFavorites?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content),"favorite clicked",Snackbar.LENGTH_SHORT).show()
-            val switchTo = FavoriteFragment()
+            val switchTo = FavoriteFragment.newInstance(uid!!)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
@@ -45,7 +63,7 @@ class HomeFragment:Fragment() {
         }
         buttonMyRecipes?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content),"my recipes clicked",Snackbar.LENGTH_SHORT).show()
-            val switchTo = MeFragment()
+            val switchTo = MeFragment.newInstance(uid!!)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {

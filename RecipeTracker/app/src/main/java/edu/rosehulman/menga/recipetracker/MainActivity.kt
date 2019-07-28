@@ -71,6 +71,9 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         var switchTo: Fragment? = null
         var backStackString: String? = null
+        if(uid == "") {
+            return true
+        }
         when (item.itemId) {
             R.id.nav_home-> {
                 switchTo = HomeFragment()
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity(),
                 Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
                 Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
                 uid = user.uid
-                switchToHomeFragment()
+                switchToHomeFragment(user.uid)
             } else {
                 switchToSplashFragment()
             }
@@ -140,9 +143,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     //TODO: might need uid for myRecipe fragment
-    private fun switchToHomeFragment() {
+    private fun switchToHomeFragment(uid: String) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, HomeFragment())
+        ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid))
         ft.commitAllowingStateLoss()
     }
 

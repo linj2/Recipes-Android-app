@@ -8,4 +8,5 @@ object Constants {
     const val SEARCH = "search"
     const val FAVORITE = "favorite"
     const val RECIPES_PATH = "recipes"
+    const val ARG_UID = "UID"
 }

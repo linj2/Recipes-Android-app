@@ -14,6 +14,18 @@ import kotlinx.android.synthetic.main.fragment_me.view.*
 
 class MeFragment: Fragment() {
 
+    private val ARG_UID = "UID"
+    private var uid: String? = null
+
+    companion object {
+        fun newInstance(uid: String) =
+            MeFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_UID, uid)
+                }
+            }
+    }
+
     lateinit var adapter: RecipeAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,7 +48,7 @@ class MeFragment: Fragment() {
         view.button_add_recipe.setOnClickListener {
             //TODO: get a new Recipe and add it in the adapter
             val builder = AlertDialog.Builder(context!!)
-            var editTextIds = ArrayList<Int>()
+            val editTextIds = ArrayList<Int>()
             // Set options
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
             builder.setView(view)
