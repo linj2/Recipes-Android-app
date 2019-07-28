@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
-    BottomNavigationView.OnNavigationItemSelectedListener,
+//    BottomNavigationView.OnNavigationItemSelectedListener,
     SplashFragment.OnLoginButtonPressedListener, RecipeAdapter.OnRecipeSelectedListener
 {
     val collection = FirebaseFirestore.getInstance().collection("collection")
@@ -27,20 +27,6 @@ class MainActivity : AppCompatActivity(),
     // Request code for launching the sign in Intent.
     private val RC_SIGN_IN = 1
 
-    fun testFirestore(): String {
-        var str = "didn't work"
-        FirebaseFirestore.getInstance().collection("collection")
-            .addSnapshotListener { snapshot, firebaseFirestoreException ->
-                if(firebaseFirestoreException != null) {
-                    return@addSnapshotListener
-                }
-                for(docChange in snapshot!!.documents) {
-                    Toast.makeText(this, docChange.getString("str"), Toast.LENGTH_SHORT).show()
-                }
-            }
-        return str
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -48,11 +34,10 @@ class MainActivity : AppCompatActivity(),
         initializeListeners()
 
         FirebaseApp.initializeApp(this)
-        testFirestore()
 
         //add selected listener for bottom navigation view
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        navView.setOnNavigationItemSelectedListener(this)
+//        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+//        navView.setOnNavigationItemSelectedListener(this)
 
         //set main fragment as default page
         if (savedInstanceState == null) {
@@ -70,44 +55,8 @@ class MainActivity : AppCompatActivity(),
         ft.replace(R.id.fragment_container, fragment).addToBackStack("recipe").commit()
     }
 
-    /*
-    TODO: I think the buttons on the home screen will work best for the navigation
-    because there are too many items that need to be immediately available to put
-    in a bottom nav. I think it would get a bit crowded, go for it. I think it would
-    eliminate the need for a homescreen, though
-     */
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        var switchTo: Fragment? = null
-        var backStackString: String? = null
-        if(uid == "") {
-            return true
-        }
-        when (item.itemId) {
-            R.id.nav_home-> {
-                switchTo = HomeFragment()
-            }
-            R.id.nav_favorite -> {
-                switchTo = FavoriteFragment()
-                backStackString = "favorite"
-            }
-            R.id.nav_me ->{
-                switchTo = MeFragment()
-                backStackString = "me"
-            }
-        }
-        if (switchTo != null) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.replace(R.id.fragment_container, switchTo)
-            for (i in 0 until supportFragmentManager.backStackEntryCount) {
-                supportFragmentManager.popBackStackImmediate()
-            }
-            if(backStackString!=null) ft.addToBackStack(backStackString)
-            ft.commit()
-        }
-        return true
-    }
 
-    //TODO: This is just here because I think it might help with the backstack later
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
 

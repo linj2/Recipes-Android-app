@@ -27,6 +27,18 @@ class RecipeFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.recipe_view, container, false)
         view.recipe_view_title.text = recipe?.title
+        view.button_delete.setOnLongClickListener {
+            val builder = AlertDialog.Builder(context!!)
+            builder
+                .setMessage("Are you sure you want to delete this recipe?")
+                .setPositiveButton(android.R.string.ok) {_, _ ->
+                    FirebaseFirestore.getInstance().collection(Constants.RECIPES_PATH).document(recipe!!.id).delete()
+                    fragmentManager?.popBackStackImmediate()
+                }
+                .setNegativeButton(android.R.string.no, null)
+            builder.create().show()
+            true
+        }
         view.button_return.setOnClickListener {
             when(previous) {
                 Constants.MY_RECIPES -> {
@@ -88,7 +100,6 @@ class RecipeFragment: Fragment() {
                 layoutParams.addRule(RelativeLayout.BELOW, lastID)
                 lastID = nextEditText.id
                 nextEditText.layoutParams = layoutParams
-                
                 layout.addView(nextEditText)
                 editTextIds.add(lastID)
             }
@@ -99,7 +110,7 @@ class RecipeFragment: Fragment() {
             dialog.setOnShowListener {
                 val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
                 neutralButton.setOnClickListener {
-                    val nextEditText = EditText(context)
+                    nextEditText = EditText(context)
                     nextEditText.id = View.generateViewId()
                     nextEditText.hint = context!!.resources.getString(R.string.ingredient)
                     val layoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -130,6 +141,38 @@ class RecipeFragment: Fragment() {
                     it.dismiss()
                 }
             }
+            /*
+            the following loop was intended to enable users to remove empty editTexts, but
+            for this to work, I think the editText would have to be set to not focusable.
+            kept in case this or similar code might be useful in the future. Doesn't seem
+            to do anything otherwise.
+             */
+            /*for((index, id) in editTextIds.withIndex()) {
+                val et = view.findViewById<EditText>(id)
+                et.setOnLongClickListener {
+                    if(et.text.toString() != "") {
+                        return@setOnLongClickListener true
+                    }
+                    if(index == editTextIds.size) {
+                        layout.removeView(et)
+                        return@setOnLongClickListener true
+                    }
+                    var aboveID = -1
+                    if(index == 0) {
+                        aboveID = view.findViewById<EditText>(R.id.instructions_edit_text).id
+                    }
+                    else {
+                        aboveID = editTextIds[index-1]
+                    }
+                    val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    layoutParams.addRule(RelativeLayout.BELOW, aboveID)
+                    layoutParams.addRule(RelativeLayout.ALIGN_START, aboveID)
+                    layoutParams.addRule(RelativeLayout.ALIGN_END, aboveID)
+                    view.findViewById<EditText>(editTextIds[id+1]).layoutParams = layoutParams
+                    layout.removeView(et)
+                    true
+                }
+            }*/
             dialog.show()
         }
         return view
