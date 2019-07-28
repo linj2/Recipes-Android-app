@@ -17,7 +17,7 @@ class CommentViewHolder: RecyclerView.ViewHolder{
         itemView.setOnClickListener{
             Log.d(Constants.TAG,"selecting comment at $adapterPosition")
             //TODO: check id for permission of edit
-//            if((context as MainActivity).uid == adapter.comments[adapterPosition].uid) {
+//            if((context as MainActivity).recipe == adapter.comments[adapterPosition].recipe) {
                 adapter.editCommentDialog(adapterPosition)
 //            }else{
 //                adapter.authMessage()

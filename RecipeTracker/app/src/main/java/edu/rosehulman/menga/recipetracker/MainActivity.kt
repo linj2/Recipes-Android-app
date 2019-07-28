@@ -12,11 +12,10 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_me.*
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
-    SplashFragment.OnLoginButtonPressedListener
+    SplashFragment.OnLoginButtonPressedListener, RecipeAdapter.OnRecipeSelectedListener
 {
     val collection = FirebaseFirestore.getInstance().collection("collection")
 
@@ -60,6 +59,12 @@ class MainActivity : AppCompatActivity(),
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
         }
+    }
+
+    override fun showRecipe(recipe: Recipe) {
+        val fragment = RecipeFragment.newInstance(recipe, "Me")
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, fragment).addToBackStack("recipe").commit()
     }
 
     /*
@@ -142,7 +147,7 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    //TODO: might need uid for myRecipe fragment
+    //TODO: might need recipe for myRecipe fragment
     private fun switchToHomeFragment(uid: String) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid))

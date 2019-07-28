@@ -40,7 +40,7 @@ class HomeFragment:Fragment() {
         //TODO: I was testing something and forgot to change it back.
         buttonSearch?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content), "search clicked", Snackbar.LENGTH_SHORT).show()
-            val switchTo = SearchFragment()
+            val switchTo = SearchFragment.newInstance(uid!!)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
@@ -74,7 +74,7 @@ class HomeFragment:Fragment() {
         }
         buttonPopular?.setOnClickListener {
             Snackbar.make(activity!!.findViewById(android.R.id.content),"popular clicked",Snackbar.LENGTH_SHORT).show()
-            val switchTo = PopularFragment()
+            val switchTo = PopularFragment.newInstance(uid!!)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {

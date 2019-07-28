@@ -1,5 +1,6 @@
 package edu.rosehulman.menga.recipetracker
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -8,7 +9,6 @@ import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.RelativeLayout
-import android.widget.ScrollView
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.fragment_me.view.*
 
@@ -16,23 +16,45 @@ class MeFragment: Fragment() {
 
     private val ARG_UID = "UID"
     private var uid: String? = null
+    lateinit var adapter: RecipeAdapter
+    private var listener: RecipeAdapter.OnRecipeSelectedListener? = null
 
     companion object {
         fun newInstance(uid: String) =
             MeFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_UID, uid)
+                    putString(Constants.ARG_UID, uid)
                 }
             }
     }
 
-    lateinit var adapter: RecipeAdapter
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(context is RecipeAdapter.OnRecipeSelectedListener) {
+            listener = context
+        }
+        else {
+            Log.e(Constants.TAG, "Should implement OnRecipeSelectedListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments.let {
+            uid = it?.getString(Constants.ARG_UID)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_me,container,false)
 
         view.button_return.setOnClickListener {
-            val switchTo = HomeFragment()
+            val switchTo = HomeFragment.newInstance(uid!!)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
             for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
@@ -40,7 +62,7 @@ class MeFragment: Fragment() {
             }
             ft.commit()
         }
-        adapter = RecipeAdapter(context!!,  "")
+        adapter = RecipeAdapter(context!!, listener!!,  "")
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
         view.recycler_view.setHasFixedSize(true)
@@ -63,7 +85,7 @@ class MeFragment: Fragment() {
                 val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
                 val layout = view.findViewById<RelativeLayout>(R.id.edit_recipe_layout)
                 neutralButton.setOnClickListener {
-                    var nextEditText = EditText(context)
+                    val nextEditText = EditText(context)
                     nextEditText.id = View.generateViewId()
                     nextEditText.hint = context!!.resources.getString(R.string.ingredient)
                     val layoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -96,12 +118,5 @@ class MeFragment: Fragment() {
             dialog.show()
         }
         return view
-    }
-
-    //TODO: write method to turn a string into a list of strings using ', ' or some sort of delimiter
-    fun toIngredientList(str: String): ArrayList<String> {
-        var list = ArrayList<String>()
-        list.add(str)
-        return list
     }
 }

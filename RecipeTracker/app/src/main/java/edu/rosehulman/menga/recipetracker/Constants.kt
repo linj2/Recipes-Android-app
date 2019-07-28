@@ -9,4 +9,6 @@ object Constants {
     const val FAVORITE = "favorite"
     const val RECIPES_PATH = "recipes"
     const val ARG_UID = "UID"
+    const val ARG_PREVIOUS = "previous"
+    const val ARG_RECIPE = "recipe"
 }

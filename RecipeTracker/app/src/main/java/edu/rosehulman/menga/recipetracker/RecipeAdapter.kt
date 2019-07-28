@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.firebase.firestore.*
 
-class RecipeAdapter(var context: Context, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
+class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
     var recipes = ArrayList<Recipe>()
     val recipeRef = FirebaseFirestore
         .getInstance()
@@ -16,7 +16,7 @@ class RecipeAdapter(var context: Context, val uid: String): RecyclerView.Adapter
     init {
         //TODO: add argument to check user for my recipes
 //        if(mine){
-//            query = picRef.whereEqualTo("uid", uid)
+//            query = picRef.whereEqualTo("recipe", recipe)
 //        }else{
 //            query = picRef.orderBy(Recipe.CREATION_KEY, Query.Direction.ASCENDING)
 //        }
@@ -27,21 +27,21 @@ class RecipeAdapter(var context: Context, val uid: String): RecyclerView.Adapter
                 Log.e(Constants.TAG, "Listen error: $exception")
                 return@addSnapshotListener
             }
-            for (picChange in snapshot!!.documentChanges) {
-                val pic = Recipe.fromSnapshot(picChange.document)
-                when (picChange.type) {
+            for (documentChange in snapshot!!.documentChanges) {
+                val recipe = Recipe.fromSnapshot(documentChange.document)
+                when (documentChange.type) {
                     DocumentChange.Type.ADDED -> {
-                        recipes.add(0, pic)
+                        recipes.add(0, recipe)
                         notifyItemInserted(0)
                     }
                     DocumentChange.Type.REMOVED -> {
-                        val pos = recipes.indexOfFirst { pic.id == it.id }
+                        val pos = recipes.indexOfFirst { recipe.id == it.id }
                         recipes.removeAt(pos)
                         notifyItemRemoved(pos)
                     }
                     DocumentChange.Type.MODIFIED -> {
-                        val pos = recipes.indexOfFirst { pic.id == it.id }
-                        recipes[pos] = pic
+                        val pos = recipes.indexOfFirst { recipe.id == it.id }
+                        recipes[pos] = recipe
                         notifyItemChanged(pos)
                     }
                 }
@@ -50,7 +50,7 @@ class RecipeAdapter(var context: Context, val uid: String): RecyclerView.Adapter
     }
 
     fun showRecipe(position: Int) {
-
+        listener.showRecipe(recipes[position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
@@ -72,7 +72,7 @@ class RecipeAdapter(var context: Context, val uid: String): RecyclerView.Adapter
         recipeRef.add(recipe)
     }
 
-    interface onRecipeSelectedListener {
-
+    interface OnRecipeSelectedListener {
+        fun showRecipe(recipe: Recipe)
     }
 }
