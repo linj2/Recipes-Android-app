@@ -66,9 +66,9 @@ class MeFragment: Fragment() {
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
         view.recycler_view.setHasFixedSize(true)
+        adapter.update()
 
         view.button_add_recipe.setOnClickListener {
-            //TODO: get a new Recipe and add it in the adapter
             val builder = AlertDialog.Builder(context!!)
             val editTextIds = ArrayList<Int>()
             // Set options

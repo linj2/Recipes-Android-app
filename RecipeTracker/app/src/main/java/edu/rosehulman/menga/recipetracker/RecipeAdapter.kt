@@ -13,7 +13,8 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
         .getInstance()
         .collection(Constants.RECIPES_PATH)
 
-    private fun update() {
+    //added because recyclerView sometimes does not populate until cursor is in title_text_view of the add dialog
+    fun update() {
         recipeRef
             //.whereEqualTo("uid", uid).orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).get()
             .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).whereEqualTo("uid", uid).get()
@@ -28,7 +29,6 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     }
 
     init {
-        update()
 //        if(mine){
 //            query = picRef.whereEqualTo("recipe", recipe)
 //        }else{
@@ -36,13 +36,16 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
 //        }
         recipeRef
             .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING)
-            .whereEqualTo("uid", uid)
+//            .whereEqualTo("uid", uid)
             .addSnapshotListener { snapshot: QuerySnapshot?, exception: FirebaseFirestoreException? ->
             if (exception != null) {
                 Log.e(Constants.TAG, "Listen error: $exception")
                 return@addSnapshotListener
             }
             for (documentChange in snapshot!!.documentChanges) {
+                if(documentChange.document["uid"] != uid) {
+                    return@addSnapshotListener
+                }
                 val recipe = Recipe.fromSnapshot(documentChange.document)
                 when (documentChange.type) {
                     DocumentChange.Type.ADDED -> {
@@ -62,6 +65,7 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
                 }
             }
         }
+        update()
     }
 
     fun showRecipe(position: Int) {
