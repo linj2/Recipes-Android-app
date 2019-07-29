@@ -13,6 +13,7 @@ class RecipeViewHolder: RecyclerView.ViewHolder {
         itemView.setOnClickListener {
             adapter.showRecipe(adapterPosition)
         }
+        //TODO: seems like we don't need long click for function? we use all the buttons to do the function
         itemView.setOnLongClickListener {
             true
         }
