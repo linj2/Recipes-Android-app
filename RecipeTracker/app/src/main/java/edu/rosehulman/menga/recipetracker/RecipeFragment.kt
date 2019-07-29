@@ -81,7 +81,9 @@ class RecipeFragment: Fragment() {
             builder.setPositiveButton(android.R.string.ok, null)
             builder.setNeutralButton("+", null)
             builder.setNegativeButton(android.R.string.cancel, null)
+
             val titleEditText = view.findViewById<EditText>(R.id.edit_title)
+            titleEditText.setText(recipe?.title)
             val dialog = builder.create()
             val layout = view.findViewById<RelativeLayout>(R.id.edit_recipe_layout)
             var lastID = R.id.ingredients_edit_text
