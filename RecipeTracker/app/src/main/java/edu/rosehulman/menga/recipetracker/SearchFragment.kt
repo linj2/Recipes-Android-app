@@ -3,6 +3,7 @@ package edu.rosehulman.menga.recipetracker
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.google.firebase.firestore.FirebaseFirestore
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import kotlinx.android.synthetic.main.fragment_search.view.*
@@ -71,13 +71,14 @@ class SearchFragment: Fragment() {
         searchButton.setOnClickListener {
 
             val query = searchBar.text.toString()
-            firebaseRecipeSearch(query)
-
+            //firebaseRecipeSearch(query)
             adapter = SearchAdapter(context!!,  listener!!)
 
             //may need to research search algorithms
             view.recycler_view.setBackgroundColor(resources.getColor(R.color.colorBackground))
             view.recycler_view.adapter = adapter
+            adapter.executeSearch(query)
+            view.recycler_view.layoutManager = LinearLayoutManager(context)
             view.recycler_view.setHasFixedSize(true)
         }
         return view
@@ -93,22 +94,20 @@ class SearchFragment: Fragment() {
             .endAt(query + "\uf8ff")
 
         Log.d(Constants.TAG,"${firebaseSearchQuery.ref.key}")
-
         val options = FirebaseRecyclerOptions.Builder<Recipe>()
             .setQuery(firebaseSearchQuery,Recipe::class.java)
             .setLifecycleOwner(this)
             .build()
-
         val firebaseRecyclerAdapter= object : FirebaseRecyclerAdapter<Recipe, RecipeViewHolder>(options) {
-            override fun onCreateViewHolder(parent: ViewGroup, p1: Int): RecipeViewHolder {
-                return adapter.onCreateViewHolder(parent,p1)
+            override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
+                return adapter.onCreateViewHolder(parent, index)
             }
 
             override fun onBindViewHolder(holder: RecipeViewHolder, position: Int, recipe: Recipe) {
                 holder.bind(recipe)
             }
         }
-
         view?.recycler_view?.adapter = firebaseRecyclerAdapter
+
     }
 }

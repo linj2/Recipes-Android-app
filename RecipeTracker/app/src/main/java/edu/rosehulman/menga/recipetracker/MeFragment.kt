@@ -99,7 +99,7 @@ class MeFragment: Fragment() {
                 }
                 val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 positiveButton.setOnClickListener {dialogView: View ->
-                    val title =titleEditText.text.toString()
+                    val title = titleEditText.text.toString()
                     val instructions = view.instructions_edit_text.text.toString()
                     val ingredientList = ArrayList<String>()
                     for(id in editTextIds) {

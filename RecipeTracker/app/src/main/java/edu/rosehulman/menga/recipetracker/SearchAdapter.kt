@@ -2,8 +2,10 @@ package edu.rosehulman.menga.recipetracker
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener): RecyclerView.Adapter<RecipeViewHolder>() {
@@ -13,17 +15,35 @@ class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSe
         .getInstance()
         .collection(Constants.RECIPES_PATH)
 
-    init {
-        recipeRef.get().addOnSuccessListener {
-            for(doc in it.documents) {
-                recipes.add(Recipe.fromSnapshot(doc))
+    //counts matches for searching later on
+    fun match(r: Recipe, q: String): Int {
+        val t = r.title
+        val queryList = ArrayList<String>()
+        var cur = ""
+        for(c in q) {
+            if(c == ' ') {
+                queryList.add(cur)
+                cur = ""
+            }
+            else {
+                if(c.isLetter()) cur += c
             }
         }
+        if(cur!="") queryList.add(cur)
+        var matches = 0
+        for(word in queryList) if(t.contains(word, true)) matches++
+        return matches
     }
 
     fun executeSearch(query: String) {
-        for(r in recipes) {
-            //if it isn't close, remove it from recipes. then the adapter will be attached
+        recipeRef.get().addOnSuccessListener {
+            var i = 0
+            for(doc in it.documents) {
+                val recipe = Recipe.fromSnapshot(doc)
+                i++
+                if(match(recipe, query)>0) recipes.add(recipe)
+            }
+            notifyDataSetChanged()
         }
     }
 

@@ -3,6 +3,7 @@ package edu.rosehulman.menga.recipetracker
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class RecipeFragment: Fragment() {
             true
         }
         view.button_return.setOnClickListener {
+            Log.d(Constants.TAG, "back to $previous")
             when(previous) {
                 Constants.MY_RECIPES -> {
                     val switchTo = MeFragment.newInstance(recipe!!.uid)
