@@ -27,6 +27,8 @@ class RecipeFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.recipe_view, container, false)
         view.recipe_view_title.text = recipe?.title
+        view.ingredients_view.text = recipe?.ingredients.toString()
+        view.instructions_view.text = recipe?.instructions
         view.button_delete.setOnLongClickListener {
             val builder = AlertDialog.Builder(context!!)
             builder
