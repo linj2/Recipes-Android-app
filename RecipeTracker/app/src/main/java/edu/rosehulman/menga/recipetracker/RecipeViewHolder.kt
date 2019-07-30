@@ -29,6 +29,16 @@ class RecipeViewHolder: RecyclerView.ViewHolder {
         }
     }
 
+    constructor(itemView: View, adapter: FavoriteAdapter, context: Context): super(itemView) {
+        this.context = context
+        itemView.setOnClickListener {
+            adapter.showRecipe(adapterPosition)
+        }
+        itemView.setOnLongClickListener {
+            true
+        }
+    }
+
     fun bind(recipe: Recipe) {
         itemView.title_recipe.text = recipe.title
     }
