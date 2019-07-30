@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -72,7 +73,7 @@ class SearchFragment: Fragment() {
 
             val query = searchBar.text.toString()
             //firebaseRecipeSearch(query)
-            adapter = SearchAdapter(context!!,  listener!!)
+            adapter = SearchAdapter(context!!,  listener!!, uid!!)
 
             //may need to research search algorithms
             view.recycler_view.setBackgroundColor(resources.getColor(R.color.colorBackground))

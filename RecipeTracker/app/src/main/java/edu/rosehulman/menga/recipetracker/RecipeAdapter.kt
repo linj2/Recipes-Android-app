@@ -69,7 +69,7 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     }
 
     fun showRecipe(position: Int) {
-        listener.showRecipe(recipes[position])
+        listener.showRecipe(recipes[position], Constants.MY_RECIPES, uid)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
@@ -91,6 +91,6 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     }
 
     interface OnRecipeSelectedListener {
-        fun showRecipe(recipe: Recipe)
+        fun showRecipe(recipe: Recipe, previous: String, viewedBy: String = "")
     }
 }

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RelativeLayout
+import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
@@ -16,31 +17,45 @@ import kotlinx.android.synthetic.main.recipe_view.view.*
 class RecipeFragment: Fragment() {
     var recipe: Recipe? = null
     var previous: String? = null
+    var viewedBy: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
             recipe = it?.getParcelable(Constants.ARG_RECIPE)
             previous = it?.getString(Constants.ARG_PREVIOUS)
+            viewedBy = it?.getString(Constants.VIEWED_BY)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.recipe_view, container, false)
+        val layout = view.findViewById<RelativeLayout>(R.id.holder_buttons)
+        if(previous == Constants.SEARCH && viewedBy != recipe?.uid) {
+            layout.removeView(view.findViewById(R.id.button_delete))
+        }
         view.recipe_view_title.text = recipe?.title
         view.ingredients_view.text = recipe?.ingredients.toString()
         view.instructions_view.text = recipe?.instructions
-        view.button_delete.setOnLongClickListener {
-            val builder = AlertDialog.Builder(context!!)
-            builder
-                .setMessage("Are you sure you want to delete this recipe?")
-                .setPositiveButton(android.R.string.ok) {_, _ ->
-                    FirebaseFirestore.getInstance().collection(Constants.RECIPES_PATH).document(recipe!!.id).delete()
-                    fragmentManager?.popBackStackImmediate()
+        if(previous != Constants.SEARCH || viewedBy == recipe?.uid) {
+            view.button_delete.setOnLongClickListener {
+                if (viewedBy != recipe?.uid) {
+                    Toast.makeText(context, "You can't delete others' recipes!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val builder = AlertDialog.Builder(context!!)
+                    builder
+                        .setMessage("Are you sure you want to delete this recipe?")
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
+                            FirebaseFirestore.getInstance().collection(Constants.RECIPES_PATH).document(recipe!!.id)
+                                .delete()
+                            fragmentManager?.popBackStackImmediate()
+                        }
+                        .setNegativeButton(android.R.string.no, null)
+                    builder.create().show()
                 }
-                .setNegativeButton(android.R.string.no, null)
-            builder.create().show()
-            true
+                true
+            }
         }
         view.button_return.setOnClickListener {
             Log.d(Constants.TAG, "back to $previous")
@@ -111,7 +126,9 @@ class RecipeFragment: Fragment() {
             }
             layout.removeView(nextEditText)
             editTextIds.removeAt(editTextIds.size-1)
-            lastID = editTextIds[editTextIds.size-1]
+            if(editTextIds.size != 0) {
+                lastID = editTextIds[editTextIds.size-1]
+            }
 
             dialog.setOnShowListener {
                 val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
@@ -185,11 +202,14 @@ class RecipeFragment: Fragment() {
     }
 
     companion object {
-        fun newInstance(recipe: Recipe, previousFragment: String) =
+        fun newInstance(recipe: Recipe, previousFragment: String, viewedBy: String = "") =
             RecipeFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(Constants.ARG_RECIPE, recipe)
                     putString(Constants.ARG_PREVIOUS, previousFragment)
+                    if(viewedBy != "") {
+                        putString(Constants.VIEWED_BY, viewedBy)
+                    }
                 }
             }
     }

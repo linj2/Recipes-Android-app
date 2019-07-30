@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 
-class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener): RecyclerView.Adapter<RecipeViewHolder>() {
+class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
     val recipes = ArrayList<Recipe>()
 
     val recipeRef = FirebaseFirestore
@@ -26,7 +26,7 @@ class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSe
                 cur = ""
             }
             else {
-                if(c.isLetter()) cur += c
+                if(c.isLetterOrDigit()) cur += c
             }
         }
         if(cur!="") queryList.add(cur)
@@ -59,6 +59,6 @@ class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSe
     }
 
     fun showRecipe(position: Int) {
-        listener.showRecipe(recipes[position])
+        listener.showRecipe(recipes[position], Constants.SEARCH, uid)
     }
 }

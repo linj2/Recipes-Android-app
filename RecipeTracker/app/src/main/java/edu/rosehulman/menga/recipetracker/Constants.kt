@@ -11,4 +11,5 @@ object Constants {
     const val ARG_UID = "UID"
     const val ARG_PREVIOUS = "previous"
     const val ARG_RECIPE = "recipe"
+    const val VIEWED_BY = "viewedBy"
 }

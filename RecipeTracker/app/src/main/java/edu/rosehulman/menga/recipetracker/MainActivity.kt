@@ -49,11 +49,12 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
     }
 
-    override fun showRecipe(recipe: Recipe) {
-        val fragment = RecipeFragment.newInstance(recipe, Constants.MY_RECIPES)
+    override fun showRecipe(recipe: Recipe, previous: String, viewedBy: String) {
+        val fragment = RecipeFragment.newInstance(recipe, previous, viewedBy)
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, fragment).addToBackStack("recipe").commit()
     }
+
 
 
 
