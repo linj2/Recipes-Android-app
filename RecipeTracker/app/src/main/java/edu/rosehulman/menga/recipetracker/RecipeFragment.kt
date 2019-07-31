@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 
-class RecipeFragment: Fragment() {
+class RecipeFragment : Fragment() {
     var recipe: Recipe? = null
     var previous: String? = null
     var viewedBy: String? = null
@@ -42,18 +42,18 @@ class RecipeFragment: Fragment() {
             view.button_delete.setOnLongClickListener {
                 if (viewedBy != recipe?.uid && previous != Constants.FAVORITE) {
                     Toast.makeText(context, "You can't delete others' recipes!", Toast.LENGTH_SHORT).show()
-                } else if(viewedBy != recipe?.uid && previous == Constants.FAVORITE) {
+                } else if (viewedBy != recipe?.uid && previous == Constants.FAVORITE) {
                     val builder = AlertDialog.Builder(context!!)
                     builder
                         .setMessage("Are you sure you want to delete this recipe?")
                         .setPositiveButton(android.R.string.ok) { _, _ ->
-                            FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).document(recipe!!.id).delete()
+                            FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).document(recipe!!.id)
+                                .delete()
                             fragmentManager?.popBackStackImmediate()
                         }
                         .setNegativeButton(android.R.string.no, null)
                     builder.create().show()
-                }
-                else {
+                } else {
                     val builder = AlertDialog.Builder(context!!)
                     builder
                         .setMessage("Are you sure you want to delete this recipe?")
@@ -102,7 +102,7 @@ class RecipeFragment: Fragment() {
                 }
             }
         }
-        if(viewedBy == recipe?.uid) {
+        if (viewedBy == recipe?.uid) {
             view.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
                 val editTextIds = ArrayList<Int>()
@@ -216,14 +216,14 @@ class RecipeFragment: Fragment() {
                 }*/
                 dialog.show()
             }
-        }
-        else {
+        } else {
             //TODO: find some better image for this, remove the text on the button
-            view.button_edit_recipe.setBackgroundResource(R.drawable.ic_favorite)
-            view.button_edit_recipe.text = "Favorite"
+            view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
+            view.button_edit_recipe.text = ""
             view.button_edit_recipe.setOnLongClickListener {
                 val r = recipe!!.clone()
                 //TODO: change background color
+                view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
                 r.favoriteOf = viewedBy!!
                 FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).add(r)
                 true
@@ -238,7 +238,7 @@ class RecipeFragment: Fragment() {
                 arguments = Bundle().apply {
                     putParcelable(Constants.ARG_RECIPE, recipe)
                     putString(Constants.ARG_PREVIOUS, previousFragment)
-                    if(viewedBy != "") {
+                    if (viewedBy != "") {
                         putString(Constants.VIEWED_BY, viewedBy)
                     }
                 }
