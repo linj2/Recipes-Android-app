@@ -233,38 +233,34 @@ class RecipeFragment: Fragment() {
                     }
                     if(unique) {
                         recipes.add(recipe)
-                        Log.d("abcdef", recipes.toString())
-                        Log.d("ingredients", recipe.ingredients.toString())
-                        Log.d(Constants.TAG, "addeddddddd")
                     }
                 }
-                Log.d("abcdefg", recipes.toString())
-                Log.d("abcdefgh", recipes.toString())
                 view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
-                Log.d("ing", r.ingredients.toString())
                 for(r2 in recipes) {
-                    if (true) {
+                    if (r.equals(r2)) {
                         view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
-                        Log.d("aaaaaaaaa", "bbbbbbbb")
                         break
                     }
                 }
                 view.button_edit_recipe.text = ""
                 view.button_return.height *= 2
-                view.button_edit_recipe.setOnLongClickListener {
-                    var contains = false
-                    recipesRef.get().addOnSuccessListener {
-                        for(doc in it.documents) {
-                            val cur = Recipe.fromSnapshot(doc)
-                            if(cur.favoriteOf == viewedBy && cur.equals(r)) {
-                                contains = true
-                            }
+                view.button_edit_recipe.height *= 2
+                var contains = false
+                recipesRef.get().addOnSuccessListener {
+                    for(doc in it.documents) {
+                        val cur = Recipe.fromSnapshot(doc)
+                        if(cur.favoriteOf == viewedBy && cur.equals(r)) {
+                            contains = true
                         }
                     }
+                }
+                view.button_edit_recipe.setOnLongClickListener {
                     if (contains) {
+                        contains = false
                         unFavorite(view, r)
                     }
                     else {
+                        contains = true
                         favorite(view, r)
                     }
                     true
@@ -274,13 +270,13 @@ class RecipeFragment: Fragment() {
         return view
     }
 
-    fun favorite(view: View, r: Recipe) {
+    private fun favorite(view: View, r: Recipe) {
         view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
         r.favoriteOf = viewedBy!!
         FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).add(r)
     }
 
-    fun unFavorite(view: View, r: Recipe) {
+    private fun unFavorite(view: View, r: Recipe) {
         view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
         FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).get().addOnSuccessListener {
             for(doc in it.documents) {
