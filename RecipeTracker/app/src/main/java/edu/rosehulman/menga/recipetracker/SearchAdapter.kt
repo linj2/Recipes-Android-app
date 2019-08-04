@@ -17,6 +17,7 @@ class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSe
 
     //counts matches for searching later on
     fun match(r: Recipe, q: String): Int {
+        if(q == "") return 1
         val t = r.title
         val queryList = ArrayList<String>()
         var cur = ""

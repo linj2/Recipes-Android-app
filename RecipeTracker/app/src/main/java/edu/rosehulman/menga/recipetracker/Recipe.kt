@@ -24,8 +24,16 @@ data class Recipe(var title: String = "",
     }
 
     fun equals(other: Recipe): Boolean {
-        return title==other.title && ingredients.equals(other.ingredients)
-                && instructions == other.instructions && uid == other.uid
+        return title==other.title && containsSame(ingredients, other.ingredients)
+                && instructions == other.instructions
+    }
+
+    fun containsSame(l1: ArrayList<String>, l2: ArrayList<String>): Boolean {
+        if(l1.size!=l2.size) return false
+        for((i,j) in l1.withIndex()) {
+            if(l1[i] != l2[i]) return false
+        }
+        return true
     }
 
     companion object {

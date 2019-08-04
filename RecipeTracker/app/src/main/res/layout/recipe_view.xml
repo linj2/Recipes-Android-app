@@ -15,16 +15,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="6dp"
     />
-    <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/add_favorite_button"
-            android:layout_width="54dp"
-            android:layout_height="43dp"
-            android:layout_toRightOf="@+id/recipe_view_title"
-            android:src="@mipmap/ic_action_favorite"
-            android:backgroundTint="@color/fui_transparent"
-            android:layout_marginLeft="1dp"/>
     <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
