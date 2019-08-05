@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
     SplashFragment.OnLoginButtonPressedListener, RecipeAdapter.OnRecipeSelectedListener {
-    val collection = FirebaseFirestore.getInstance().collection("collection")
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     var uid: String = ""
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        var switchTo: Fragment? = null
+        var switchTo: Fragment
         when (item.itemId) {
             R.id.nav_home-> {
                 switchTo = HomeFragment()
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity(),
                 ft.commit()
             }
             R.id.nav_search ->{
-                switchTo = SearchFragment.newInstance(uid!!)
+                switchTo = SearchFragment.newInstance(uid)
                 val ft = supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, switchTo)
                 for (i in 0 until supportFragmentManager.backStackEntryCount) {
