@@ -16,13 +16,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
-//    BottomNavigationView.OnNavigationItemSelectedListener,
-    SplashFragment.OnLoginButtonPressedListener, RecipeAdapter.OnRecipeSelectedListener
-{
+    BottomNavigationView.OnNavigationItemSelectedListener,
+    SplashFragment.OnLoginButtonPressedListener, RecipeAdapter.OnRecipeSelectedListener {
     val collection = FirebaseFirestore.getInstance().collection("collection")
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    var uid :String = ""
+    var uid: String = ""
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     // Request code for launching the sign in Intent.
     private val RC_SIGN_IN = 1
@@ -31,13 +30,14 @@ class MainActivity : AppCompatActivity(),
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
         initializeListeners()
 
         FirebaseApp.initializeApp(this)
 
         //add selected listener for bottom navigation view
-//        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-//        navView.setOnNavigationItemSelectedListener(this)
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView.setOnNavigationItemSelectedListener(this)
 
         //set main fragment as default page
         if (savedInstanceState == null) {
@@ -46,7 +46,64 @@ class MainActivity : AppCompatActivity(),
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
         }
-        setSupportActionBar(toolbar)
+
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        var switchTo: Fragment? = null
+        when (item.itemId) {
+            R.id.nav_home-> {
+                switchTo = HomeFragment()
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, switchTo)
+                for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                    supportFragmentManager.popBackStackImmediate()
+                }
+                ft.addToBackStack(Constants.HOME)
+                ft.commit()
+            }
+            R.id.nav_favorite -> {
+                switchTo = FavoriteFragment.newInstance(uid)
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, switchTo)
+                for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                    supportFragmentManager.popBackStackImmediate()
+                }
+                ft.addToBackStack(Constants.FAVORITE)
+                ft.commit()
+            }
+            R.id.nav_popular ->{
+                switchTo = PopularFragment.newInstance(uid)
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, switchTo)
+                for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                    supportFragmentManager.popBackStackImmediate()
+                }
+                ft.addToBackStack(Constants.POPULAR)
+                ft.commit()
+            }
+            R.id.nav_me ->{
+                switchTo = MeFragment.newInstance(uid)
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, switchTo)
+                for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                    supportFragmentManager.popBackStackImmediate()
+                }
+                ft.addToBackStack(Constants.MY_RECIPES)
+                ft.commit()
+            }
+            R.id.nav_search ->{
+                switchTo = SearchFragment.newInstance(uid!!)
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, switchTo)
+                for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                    supportFragmentManager.popBackStackImmediate()
+                }
+                ft.addToBackStack(Constants.SEARCH)
+                ft.commit()
+            }
+        }
+        return true
     }
 
     override fun showRecipe(recipe: Recipe, previous: String, viewedBy: String) {
@@ -56,16 +113,6 @@ class MainActivity : AppCompatActivity(),
     }
 
 
-
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-
-        }
-        return super.onKeyDown(keyCode, event)
-    }
-
-    //rest of it just go log in page
     override fun onStart() {
         super.onStart()
         auth.addAuthStateListener(authStateListener)
@@ -104,10 +151,9 @@ class MainActivity : AppCompatActivity(),
         return when (item.itemId) {
             R.id.action_logout -> {
                 // User chose the "Settings" item, show the app settings UI...
-                if(uid == "") {
+                if (uid == "") {
                     Toast.makeText(this, "Already logged out", Toast.LENGTH_SHORT).show()
-                }
-                else auth.signOut()
+                } else auth.signOut()
                 true
             }
 
@@ -125,11 +171,11 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    //TODO: might need recipe for myRecipe fragment
     private fun switchToHomeFragment(uid: String) {
+        this.uid = uid
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid))
-        ft.commitAllowingStateLoss()
+        ft.commit()
     }
 
     override fun onLoginButtonPressed() {
@@ -146,7 +192,7 @@ class MainActivity : AppCompatActivity(),
         val loginIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
-            .setLogo(R.mipmap.ic_launcher_custom)
+            .setLogo(R.mipmap.ic_launcher)
             .build()
 
         // Create and launch sign-in intent

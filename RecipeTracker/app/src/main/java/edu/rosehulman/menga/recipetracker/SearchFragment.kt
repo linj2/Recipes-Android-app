@@ -16,8 +16,9 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import com.google.firebase.database.FirebaseDatabase
-
-
+import android.app.Activity
+import android.support.v4.content.ContextCompat.getSystemService
+import android.view.inputmethod.InputMethodManager
 
 
 class SearchFragment: Fragment() {
@@ -81,6 +82,11 @@ class SearchFragment: Fragment() {
             adapter.executeSearch(query)
             view.recycler_view.layoutManager = LinearLayoutManager(context)
             view.recycler_view.setHasFixedSize(true)
+
+            //close the keyboard
+            val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+            view.clearFocus()
         }
         return view
     }

@@ -19,4 +19,5 @@
     <string name="dialog_edit_title">Edit the comment</string>
     <string name="login">Login</string>
     <string name="icon">Icon</string>
+    <string name="popular_nav">Popular</string>
 </resources>

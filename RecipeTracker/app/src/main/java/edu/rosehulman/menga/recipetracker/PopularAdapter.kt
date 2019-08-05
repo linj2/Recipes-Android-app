@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 
 class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
     val popularRecipes = ArrayList<Recipe>()
@@ -24,6 +24,15 @@ class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeS
             }
             notifyDataSetChanged()
         }
+        //update
+        recipeRef.get().addOnSuccessListener {
+                popularRecipes.clear()
+                for(doc in it.documents) {
+                    val recipe = Recipe.fromSnapshot(doc)
+                    popularRecipes.add(recipe)
+                }
+                notifyDataSetChanged()
+            }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
@@ -38,6 +47,6 @@ class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeS
     }
 
     fun showRecipe(position: Int) {
-        listener.showRecipe(popularRecipes[position], Constants.SEARCH, uid)
+        listener.showRecipe(popularRecipes[position], Constants.FRAGMENTS, uid)
     }
 }

@@ -29,5 +29,13 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
     />
+    <android.support.design.widget.BottomNavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:menu="@menu/bottom_nav_menu"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
