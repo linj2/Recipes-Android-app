@@ -15,7 +15,6 @@ class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeS
         .getInstance()
         .collection(Constants.USERS_PATH)
 
-    //TODO: get most favorited list
     fun getPopularRecipes() {
         recipeRef.get().addOnSuccessListener {
             popularRecipes.clear()
@@ -27,15 +26,6 @@ class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeS
             }
             notifyDataSetChanged()
         }
-        //update
-        recipeRef.get().addOnSuccessListener {
-                popularRecipes.clear()
-                for(doc in it.documents) {
-                    val recipe = Recipe.fromSnapshot(doc)
-                    popularRecipes.add(recipe)
-                }
-                notifyDataSetChanged()
-            }
     }
 
     fun add(recipe: Recipe) {
