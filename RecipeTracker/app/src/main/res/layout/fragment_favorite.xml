@@ -15,16 +15,8 @@
             android:textSize="24sp"
             android:textStyle="bold"
     />
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_return"
-            android:layout_alignParentRight="true"
-            android:text="Back"
-            android:layout_below="@+id/comments_title"
-    />
     <android.support.v7.widget.RecyclerView
-            android:layout_below="@+id/button_return"
+            android:layout_below="@+id/comments_title"
             android:id="@+id/recycler_view"
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"

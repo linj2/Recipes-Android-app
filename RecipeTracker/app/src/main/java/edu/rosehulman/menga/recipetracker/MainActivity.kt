@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity(),
 
         //set main fragment as default page
         if (savedInstanceState == null) {
-            val fragment = HomeFragment()
+            val fragment = PopularFragment.newInstance(uid)
             val ft = supportFragmentManager.beginTransaction()
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
@@ -51,16 +49,6 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         var switchTo: Fragment
         when (item.itemId) {
-            R.id.nav_home-> {
-                switchTo = HomeFragment()
-                val ft = supportFragmentManager.beginTransaction()
-                ft.replace(R.id.fragment_container, switchTo)
-                for (i in 0 until supportFragmentManager.backStackEntryCount) {
-                    supportFragmentManager.popBackStackImmediate()
-                }
-                ft.addToBackStack(Constants.HOME)
-                ft.commit()
-            }
             R.id.nav_favorite -> {
                 switchTo = FavoriteFragment.newInstance(uid)
                 val ft = supportFragmentManager.beginTransaction()
@@ -133,7 +121,7 @@ class MainActivity : AppCompatActivity(),
                 Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
                 Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
                 uid = user.uid
-                switchToHomeFragment(user.uid)
+                switchToPopularFragment(user.uid)
             } else {
                 switchToSplashFragment()
             }
@@ -170,10 +158,10 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    private fun switchToHomeFragment(uid: String) {
+    private fun switchToPopularFragment(uid: String) {
         this.uid = uid
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid))
+        ft.replace(R.id.fragment_container, PopularFragment.newInstance(uid))
         ft.commit()
     }
 

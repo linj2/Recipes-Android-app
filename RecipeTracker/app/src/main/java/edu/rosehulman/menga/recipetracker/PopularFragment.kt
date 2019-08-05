@@ -4,20 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import kotlinx.android.synthetic.main.fragment_popular.view.*
-import kotlinx.android.synthetic.main.fragment_popular.view.button_return
 import kotlinx.android.synthetic.main.fragment_popular.view.recycler_view
-import kotlinx.android.synthetic.main.fragment_search.view.*
 
-private const val ARG_COLUMNS = "ARG_COLUMNS"
+//private const val ARG_COLUMNS = "ARG_COLUMNS"
 
 class PopularFragment : Fragment() {
     private var uid: String? = null
@@ -63,16 +57,15 @@ class PopularFragment : Fragment() {
         adapter.getPopularRecipes()
         view.recycler_view.layoutManager = GridLayoutManager(context, columns)
         view.recycler_view.setHasFixedSize(true)
-
-        view.button_return.setOnClickListener {
-            val switchTo = HomeFragment.newInstance(uid!!)
-            val ft = activity!!.supportFragmentManager.beginTransaction()
-            ft.replace(R.id.fragment_container, switchTo)
-            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
-                activity!!.supportFragmentManager.popBackStackImmediate()
-            }
-            ft.commit()
-        }
+//        view.button_return.setOnClickListener {
+//            val switchTo = HomeFragment.newInstance(uid!!)
+//            val ft = activity!!.supportFragmentManager.beginTransaction()
+//            ft.replace(R.id.fragment_container, switchTo)
+//            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+//                activity!!.supportFragmentManager.popBackStackImmediate()
+//            }
+//            ft.commit()
+//        }
         return view
     }
 }

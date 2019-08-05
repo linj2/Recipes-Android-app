@@ -18,18 +18,10 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button_return"
-            android:layout_alignParentRight="true"
-            android:text="@string/string_return"
-            android:layout_below="@+id/my_recipes_title"
-    />
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/button_add_recipe"
             android:text="@string/add_a_recipe"
-            android:layout_below="@+id/button_return"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/my_recipes_title"
+            android:layout_alignParentStart="true"
             android:contentDescription="could be replaced with fab"
     />
     <android.support.v7.widget.RecyclerView
