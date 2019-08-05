@@ -13,19 +13,12 @@ class RecipeViewHolder: RecyclerView.ViewHolder {
         itemView.setOnClickListener {
             adapter.showRecipe(adapterPosition)
         }
-        //TODO: seems like we don't need long click for function? we use all the buttons to do the function
-        itemView.setOnLongClickListener {
-            true
-        }
     }
 
     constructor(itemView: View, adapter: SearchAdapter, context: Context): super(itemView) {
         this.context = context
         itemView.setOnClickListener {
             adapter.showRecipe(adapterPosition)
-        }
-        itemView.setOnLongClickListener {
-            true
         }
     }
 
@@ -34,8 +27,12 @@ class RecipeViewHolder: RecyclerView.ViewHolder {
         itemView.setOnClickListener {
             adapter.showRecipe(adapterPosition)
         }
-        itemView.setOnLongClickListener {
-            true
+    }
+
+    constructor(itemView: View, adapter: PopularAdapter, context: Context): super(itemView) {
+        this.context = context
+        itemView.setOnClickListener {
+            adapter.showRecipe(adapterPosition)
         }
     }
 

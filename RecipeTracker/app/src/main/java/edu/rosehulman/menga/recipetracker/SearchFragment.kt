@@ -84,31 +84,31 @@ class SearchFragment: Fragment() {
         }
         return view
     }
-    private fun firebaseRecipeSearch(query:String){
-        Toast.makeText(context, "Start Searching", Toast.LENGTH_LONG).show()
-
-        val firebaseSearchQuery = FirebaseDatabase.getInstance()
-            .reference
-            .child(Constants.RECIPES_PATH)
-            .child("title")
-            .startAt(query)
-            .endAt(query + "\uf8ff")
-
-        Log.d(Constants.TAG,"${firebaseSearchQuery.ref.key}")
-        val options = FirebaseRecyclerOptions.Builder<Recipe>()
-            .setQuery(firebaseSearchQuery,Recipe::class.java)
-            .setLifecycleOwner(this)
-            .build()
-        val firebaseRecyclerAdapter= object : FirebaseRecyclerAdapter<Recipe, RecipeViewHolder>(options) {
-            override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
-                return adapter.onCreateViewHolder(parent, index)
-            }
-
-            override fun onBindViewHolder(holder: RecipeViewHolder, position: Int, recipe: Recipe) {
-                holder.bind(recipe)
-            }
-        }
-        view?.recycler_view?.adapter = firebaseRecyclerAdapter
-
-    }
+//    private fun firebaseRecipeSearch(query:String){
+//        Toast.makeText(context, "Start Searching", Toast.LENGTH_LONG).show()
+//
+//        val firebaseSearchQuery = FirebaseDatabase.getInstance()
+//            .reference
+//            .child(Constants.RECIPES_PATH)
+//            .child("title")
+//            .startAt(query)
+//            .endAt(query + "\uf8ff")
+//
+//        Log.d(Constants.TAG,"${firebaseSearchQuery.ref.key}")
+//        val options = FirebaseRecyclerOptions.Builder<Recipe>()
+//            .setQuery(firebaseSearchQuery,Recipe::class.java)
+//            .setLifecycleOwner(this)
+//            .build()
+//        val firebaseRecyclerAdapter= object : FirebaseRecyclerAdapter<Recipe, RecipeViewHolder>(options) {
+//            override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
+//                return adapter.onCreateViewHolder(parent, index)
+//            }
+//
+//            override fun onBindViewHolder(holder: RecipeViewHolder, position: Int, recipe: Recipe) {
+//                holder.bind(recipe)
+//            }
+//        }
+//        view?.recycler_view?.adapter = firebaseRecyclerAdapter
+//
+//    }
 }
