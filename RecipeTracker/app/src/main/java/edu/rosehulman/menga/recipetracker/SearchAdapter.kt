@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
-    val recipes = ArrayList<Recipe>()
+    val recipes = ArrayList<Pair<Recipe, Int>>()
 
     val recipeRef = FirebaseFirestore
         .getInstance()
@@ -42,7 +42,11 @@ class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSe
             for(doc in it.documents) {
                 val recipe = Recipe.fromSnapshot(doc)
                 i++
-                if(match(recipe, query)>0) recipes.add(recipe)
+                val matches = match(recipe, query)
+                if(matches>0) recipes.add(Pair(recipe, matches))
+            }
+            recipes.sortByDescending {
+                it.second
             }
             notifyDataSetChanged()
         }
@@ -56,10 +60,10 @@ class SearchAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSe
     override fun getItemCount() = recipes.size
 
     override fun onBindViewHolder(holder: RecipeViewHolder, index: Int) {
-        holder.bind(recipes[index])
+        holder.bind(recipes[index].first)
     }
 
     fun showRecipe(position: Int) {
-        listener.showRecipe(recipes[position], Constants.SEARCH, uid)
+        listener.showRecipe(recipes[position].first, Constants.SEARCH, uid)
     }
 }
