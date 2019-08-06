@@ -16,12 +16,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.fragment_me.view.*
 import java.io.ByteArrayOutputStream
@@ -42,6 +44,9 @@ class MeFragment: Fragment() {
     lateinit var adapter: RecipeAdapter
     private var listener: RecipeAdapter.OnRecipeSelectedListener? = null
     private var currentPhotoPath = ""
+
+    var url = ""
+    var into: ImageView? = null
 
     val thumbnailRef = FirebaseFirestore
         .getInstance()
@@ -110,6 +115,7 @@ class MeFragment: Fragment() {
             builder.setNeutralButton("+", null)
             builder.setNegativeButton(android.R.string.cancel, null)
             view.recipe_image.setOnClickListener {
+                into = view.recipe_image
                 showPictureDialog()
             }
             val titleEditText = view.findViewById<EditText>(R.id.edit_title)
@@ -141,12 +147,15 @@ class MeFragment: Fragment() {
                         val ingredient = view.findViewById<EditText>(id).text.toString()
                         ingredientList.add(ingredient)
                     }
-                    val recipe = Recipe(title, ingredientList, instructions, uid!!)
+                    val recipe = Recipe(title, ingredientList, instructions, uid!!, "")//, url)
+                    url = ""
                     adapter.add(recipe)
+                    into = null
                     it.dismiss()
                 }
                 val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                 negativeButton.setOnClickListener {dialogView: View ->
+                    into = null
                     it.dismiss()
                 }
             }
@@ -207,7 +216,7 @@ class MeFragment: Fragment() {
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
+            // Save a file: url for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
         }
     }
@@ -255,6 +264,7 @@ class MeFragment: Fragment() {
     private fun sendGalleryPhotoToAdapter(data: Intent?) {
         if (data != null && data.data != null) {
             val location = data.data!!.toString()
+            ImageRescaleTask(location).execute()
             //adapter.add(location)
         }
     }
@@ -267,13 +277,13 @@ class MeFragment: Fragment() {
         }
 
         override fun onPostExecute(bitmap: Bitmap?) {
-            // TODO: Write and call a new storageAdd() method with the path and bitmap
+            // TODO: Write and call a new storageAdd() method with the url and bitmap
             // that uses Firebase storage.
             // https://firebase.google.com/docs/storage/android/upload-files
             storageAdd(localPath, bitmap)
         }
 
-        fun storageAdd(path: String, bitmap: Bitmap?): String? {
+        fun storageAdd(myPath: String, bitmap: Bitmap?): String? {
             val baos = ByteArrayOutputStream()
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val bytes = baos.toByteArray()
@@ -296,22 +306,18 @@ class MeFragment: Fragment() {
             }).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val downloadUri = task.result
-
-                    val task2: AddToStorageTask = AddToStorageTask()
-//                        when (listener!!.getTaskType()) {
-//                        MLKitTaskType.LABEL -> MLKitLabelTask()
-//                        MLKitTaskType.OCR -> MLKitOcrTask()
-//                        MLKitTaskType.OCR_CLOUD -> MLKitCloudOcrTask()
-//                        MLKitTaskType.BARCODE -> MLKitBarcodeTask()
-//                        MLKitTaskType.LABEL_CLOUD -> MLKitCloudLabelTask()
-//                        null -> MLKitLabelTask()
-//                    }
-                    task2.execute(downloadUri.toString(), id, bitmap!!, thumbnailRef)
-
+                    url = downloadUri.toString()
+                    Log.d("picasso", "not loading")
+                    if(into!=null) {
+                        Log.d("picasso", "started loading")
+                        Picasso.get().load(url).into(into)
+                    }
                 } else {
                     // Handle failures
                     // ...
                 }
+            }.addOnFailureListener {
+                Log.d("storage", "failed")
             }
             return null
         }
