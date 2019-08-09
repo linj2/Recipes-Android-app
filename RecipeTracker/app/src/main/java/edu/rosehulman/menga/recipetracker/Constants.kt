@@ -12,6 +12,7 @@ object Constants {
     const val ARG_RECIPE = "recipe"
     const val VIEWED_BY = "viewedBy"
     const val USERS_PATH = "users"
+    const val IMAGES_PATH = "images"
     const val HOME = "home"
     const val FRAGMENTS = "fragments"
 }

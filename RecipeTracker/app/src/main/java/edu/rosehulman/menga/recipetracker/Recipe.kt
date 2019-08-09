@@ -12,7 +12,8 @@ import kotlinx.android.parcel.Parcelize
 data class Recipe(var title: String = "",
                   var ingredients: ArrayList<String> = ArrayList(),
                   var instructions: String = "", val uid: String = "",
-                  var favoriteOf: String = ""): Parcelable {
+                  var favoriteOf: String = "", var picId: Long = -1,
+                  var url: String = ""): Parcelable {
 
     @get:Exclude
     var id =""

@@ -26,6 +26,7 @@ import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.fragment_me.view.*
+import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -47,15 +48,12 @@ class MeFragment: Fragment() {
 
     var url = ""
     var into: ImageView? = null
-
-    val thumbnailRef = FirebaseFirestore
-        .getInstance()
-        .collection(Constants.RECIPES_PATH)
+    private var picId: Long = -1
 
     private val storageRef =
         FirebaseStorage
             .getInstance()
-            .reference.child("images")
+            .reference.child(Constants.IMAGES_PATH)
 
     companion object {
         fun newInstance(uid: String) =
@@ -147,15 +145,19 @@ class MeFragment: Fragment() {
                         val ingredient = view.findViewById<EditText>(id).text.toString()
                         ingredientList.add(ingredient)
                     }
-                    val recipe = Recipe(title, ingredientList, instructions, uid!!, "")//, url)
+                    val recipe = Recipe(title, ingredientList, instructions, uid!!, "", picId, url)
                     url = ""
                     adapter.add(recipe)
                     into = null
+                    picId = -1
+                    url = ""
                     it.dismiss()
                 }
                 val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                 negativeButton.setOnClickListener {dialogView: View ->
                     into = null
+                    picId = -1
+                    url = ""
                     it.dismiss()
                 }
             }
@@ -294,6 +296,7 @@ class MeFragment: Fragment() {
             }.addOnSuccessListener {
                 // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
                 // ...
+                picId = id.toLong()
             }
 
             uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->

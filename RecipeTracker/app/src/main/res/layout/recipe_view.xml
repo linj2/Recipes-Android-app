@@ -58,7 +58,7 @@
             android:layout_below="@+id/holder_buttons"
             android:layout_centerHorizontal="true"
             android:contentDescription="Placeholder for recipe image"
-            android:id="@+id/recipe_image"
+            android:id="@+id/recipe_image_view"
     />
     <TextView
             android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:text="Ingredients"
             android:id="@+id/ingredients_view"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/recipe_image"
+            android:layout_below="@+id/recipe_image_view"
             android:contentDescription="may be replaced with recycler view holding ingredients - may want to wait on that"
     />
     <TextView
