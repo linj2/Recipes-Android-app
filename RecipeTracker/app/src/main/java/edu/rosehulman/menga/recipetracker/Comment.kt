@@ -9,18 +9,18 @@ import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Comment(var content: String?, val uid:String?, val recipeId:String?):Parcelable {
-    @get:Exclude
-    var id =""
-    @ServerTimestamp
-    var timeStamp: Timestamp? = null
+data class Comment(var content: String?="",
+                   val uid:String?="",
+                   val recipeId:String?=""):Parcelable {
+    @get:Exclude var id =""
+    @ServerTimestamp var timeStamp: Timestamp? = null
 
     companion object {
         const val CREATION_KEY = "timeStamp"
         fun fromSnapshot(snapshot: DocumentSnapshot): Comment {
-            val c = snapshot.toObject(Comment::class.java)!!
-            c.id = snapshot.id
-            return c
+            val comment = snapshot.toObject(Comment::class.java)!!
+            comment.id = snapshot.id
+            return comment
         }
     }
 }

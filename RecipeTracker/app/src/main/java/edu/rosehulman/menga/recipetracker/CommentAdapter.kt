@@ -7,12 +7,47 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import com.google.firebase.firestore.*
 
-class CommentAdapter(var context: Context) : RecyclerView.Adapter<CommentViewHolder>() {
+class CommentAdapter(var context: Context?, val uid: String) : RecyclerView.Adapter<CommentViewHolder>() {
     val comments = ArrayList<Comment>()
+    val commentRef = FirebaseFirestore
+        .getInstance()
+        .collection(Constants.COMMENT)
 
     init {
         //TODO: add snapshot Listener for the comment ref
+        commentRef
+            .orderBy(Comment.CREATION_KEY, Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot: QuerySnapshot?, exception: FirebaseFirestoreException? ->
+                if (exception != null) {
+                    Log.e(Constants.TAG, "Listen error: $exception")
+                    return@addSnapshotListener
+                }
+                for (documentChange in snapshot!!.documentChanges) {
+                    if(documentChange.document["uid"] != uid) {
+                        return@addSnapshotListener
+                    }
+                    val comment = Comment.fromSnapshot(documentChange.document)
+                    when (documentChange.type) {
+                        DocumentChange.Type.ADDED -> {
+                            comments.add(0, comment)
+                            notifyItemInserted(0)
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            val pos = comments.indexOfFirst { comment.id == it.id }
+                            comments.removeAt(pos)
+                            notifyItemRemoved(pos)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            val pos = comments.indexOfFirst { comment.id == it.id }
+                            comments[pos] = comment
+                            notifyItemChanged(pos)
+                        }
+                    }
+                }
+            }
 
     }
 
@@ -21,7 +56,7 @@ class CommentAdapter(var context: Context) : RecyclerView.Adapter<CommentViewHol
     override fun onCreateViewHolder(parent: ViewGroup, index: Int): CommentViewHolder {
         Log.d(Constants.TAG,"Creating view holder for comment")
         val view = LayoutInflater.from(context).inflate(R.layout.row_comment, parent, false)
-        return CommentViewHolder(view,this,context)
+        return CommentViewHolder(view,this,context!!)
     }
 
     override fun onBindViewHolder(viewHolder: CommentViewHolder, index: Int) {
@@ -39,17 +74,26 @@ class CommentAdapter(var context: Context) : RecyclerView.Adapter<CommentViewHol
             val content = commentEditText.text.toString()
             edit(position,content)
         }
+        builder.setNeutralButton(context?.getString(R.string.delete)){_,_ ->
+            remove(position)
+        }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
     }
     private fun remove(position: Int){
-        //TODO: Firebase backend needs to delete
-//        commentRef.document(comments[position].id).delete()
+        commentRef.document(comments[position].id).delete()
     }
 
     private  fun edit(position: Int,content:String){
         comments[position].content = content
-        //TODO: Firebase backend needs to update too
-//        commentRef.document(comments[position].id).set(commentss[position])
+        commentRef.document(comments[position].id).set(comments[position])
+    }
+
+    fun add(comment: Comment) {
+        commentRef.add(comment)
+    }
+
+    fun authMessage() {
+        Toast.makeText((context as MainActivity), "Sorry, you do not have the permission to edit this comment.",Toast.LENGTH_SHORT).show()
     }
 }

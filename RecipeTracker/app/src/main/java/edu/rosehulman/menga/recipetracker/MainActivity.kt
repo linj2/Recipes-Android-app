@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
-    SplashFragment.OnLoginButtonPressedListener, RecipeAdapter.OnRecipeSelectedListener {
+    SplashFragment.OnLoginButtonPressedListener,
+    RecipeAdapter.OnRecipeSelectedListener
+{
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     var uid: String = ""

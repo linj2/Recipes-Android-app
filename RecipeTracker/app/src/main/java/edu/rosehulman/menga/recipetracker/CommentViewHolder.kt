@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import kotlinx.android.synthetic.main.row_comment.*
 import kotlinx.android.synthetic.main.row_comment.view.*
+import kotlinx.android.synthetic.main.row_comment.view.comment
 
 class CommentViewHolder: RecyclerView.ViewHolder{
     val usernameTextView: TextView = itemView.username
@@ -14,14 +16,14 @@ class CommentViewHolder: RecyclerView.ViewHolder{
 
     constructor(itemView: View, adapter: CommentAdapter, context: Context):super(itemView){
         this.context = context
-        itemView.setOnClickListener{
+        itemView.setOnLongClickListener{
             Log.d(Constants.TAG,"selecting comment at $adapterPosition")
-            //TODO: check id for permission of edit
-//            if((context as MainActivity).recipe == adapter.comments[adapterPosition].recipe) {
+            if((context as MainActivity).uid == adapter.comments[adapterPosition].uid) {
                 adapter.editCommentDialog(adapterPosition)
-//            }else{
-//                adapter.authMessage()
-//            }
+            }else{
+                adapter.authMessage()
+            }
+            true
         }
     }
 
