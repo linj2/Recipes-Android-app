@@ -63,12 +63,12 @@ class RecipeFragment: Fragment() {
         //comment button
         val showCommentB = view.findViewById<Button>(R.id.Button_show_comment)
         showCommentB.setOnClickListener {
-            val switchTo =CommentsFragment.newInstance(recipe!!.uid)
+            val switchTo =CommentsFragment.newInstance(viewedBy!!)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
-            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
-                activity!!.supportFragmentManager.popBackStackImmediate()
-            }
+//            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+//                activity!!.supportFragmentManager.popBackStackImmediate()
+//            }
             ft.addToBackStack(Constants.COMMENT)
             ft.commit()
         }
@@ -144,6 +144,13 @@ class RecipeFragment: Fragment() {
                 }
                 Constants.SEARCH -> {
                     val switchTo = SearchFragment.newInstance(viewedBy!!)
+                    val ft = activity!!.supportFragmentManager.beginTransaction()
+                    ft.replace(R.id.fragment_container, switchTo)
+                    activity!!.supportFragmentManager.popBackStackImmediate()
+                    ft.commit()
+                }
+                Constants.COMMENT -> {
+                    val switchTo = CommentsFragment.newInstance(viewedBy!!)
                     val ft = activity!!.supportFragmentManager.beginTransaction()
                     ft.replace(R.id.fragment_container, switchTo)
                     activity!!.supportFragmentManager.popBackStackImmediate()
