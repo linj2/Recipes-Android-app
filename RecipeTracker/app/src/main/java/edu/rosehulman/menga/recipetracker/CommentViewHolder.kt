@@ -27,7 +27,7 @@ class CommentViewHolder: RecyclerView.ViewHolder{
 
     fun bind(comment: Comment) {
         Log.d(Constants.TAG,"Binding View holder for comment")
-        usernameTextView.text = comment.user
+        usernameTextView.text = comment.uid
         contentTextView.text = comment.content
     }
 }

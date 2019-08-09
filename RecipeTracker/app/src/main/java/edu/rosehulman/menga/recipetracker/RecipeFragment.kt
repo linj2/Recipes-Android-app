@@ -15,10 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.Toast
+import android.widget.*
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
@@ -62,6 +59,20 @@ class RecipeFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.recipe_view, container, false)
+
+        //comment button
+        val showCommentB = view.findViewById<Button>(R.id.Button_show_comment)
+        showCommentB.setOnClickListener {
+            val switchTo =CommentsFragment.newInstance(recipe!!.uid)
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, switchTo)
+            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
+                activity!!.supportFragmentManager.popBackStackImmediate()
+            }
+            ft.addToBackStack(Constants.COMMENT)
+            ft.commit()
+        }
+
         val layout = view.findViewById<RelativeLayout>(R.id.holder_buttons)
         if (previous == Constants.SEARCH && viewedBy != recipe?.uid) {
             layout.removeView(view.findViewById(R.id.button_delete))

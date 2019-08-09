@@ -20,4 +20,11 @@
     <string name="login">Login</string>
     <string name="icon">Icon</string>
     <string name="popular_nav">Popular</string>
+    <string name="add_a_comment">Add a comment...</string>
+    <string name="send">send</string>
+    <string name="username">username</string>
+    <string name="comment">Comment</string>
+    <string name="back">Back</string>
+    <string name="remove">Remove</string>
+    <string name="edit_recipe">Edit Recipe</string>
 </resources>

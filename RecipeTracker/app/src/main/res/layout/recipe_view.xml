@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
@@ -7,7 +8,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recipe Name"
+            android:text="@string/recipe_name"
             android:layout_alignStart="@id/holder_buttons"
             android:layout_alignEnd="@id/holder_buttons"
             android:id="@+id/recipe_view_title"
@@ -28,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_return"
-                android:text="Back"
+                android:text="@string/back"
                 android:layout_toEndOf="@+id/button_edit_recipe"
                 android:layout_marginEnd="10dp"
         />
@@ -39,13 +40,13 @@
                 android:layout_alignStart="@+id/button_return"
                 android:layout_alignEnd="@id/button_return"
                 android:layout_below="@id/button_return"
-                android:text="Remove"
+                android:text="@string/remove"
         />
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_edit_recipe"
-                android:text="Edit Recipe"
+                android:text="@string/edit_recipe"
                 android:layout_alignTop="@id/button_return"
                 android:layout_alignBottom="@id/button_delete"
                 android:layout_marginEnd="10dp"
@@ -78,6 +79,12 @@
             android:layout_below="@+id/ingredients_view"
             android:contentDescription="may want to change to recycler view or something which permits scrolling if this doesn't"
     />
-
-
+    <Button
+            android:id="@+id/Button_show_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment"
+            android:layout_below="@+id/instructions_view"
+            android:layout_centerHorizontal="true"
+    />
 </RelativeLayout>

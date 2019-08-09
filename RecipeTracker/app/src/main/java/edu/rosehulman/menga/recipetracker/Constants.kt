@@ -16,5 +16,5 @@ object Constants {
     const val USERS_PATH = "users"
     const val IMAGES_PATH = "images"
     const val HOME = "home"
-    const val FRAGMENTS = "fragments"
+    const val COMMENT = "comment"
 }

@@ -40,9 +40,9 @@ data class Recipe(var title: String = "",
     companion object {
         const val CREATION_KEY = "creation"
         fun fromSnapshot(snapshot: DocumentSnapshot): Recipe {
-            val pic = snapshot.toObject(Recipe::class.java)!!
-            pic.id = snapshot.id
-            return pic
+            val recipe = snapshot.toObject(Recipe::class.java)!!
+            recipe.id = snapshot.id
+            return recipe
         }
     }
 }
