@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
@@ -114,6 +115,7 @@ class RecipeFragment: Fragment() {
                     activity!!.supportFragmentManager.popBackStackImmediate()
 //                    ft.addToBackStack(Constants.MY_RECIPES)
                     ft.commit()
+//                    nav_view.selectedItemId=R.id.nav_me
                 }
                 Constants.POPULAR -> {
                     val switchTo = PopularFragment.newInstance(viewedBy!!)
@@ -145,7 +147,9 @@ class RecipeFragment: Fragment() {
                 // Set options
                 val view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
                 builder.setView(view)
-                Picasso.get().load(recipe?.url).into(view.recipe_image)
+                if(recipe?.picId!=(-1).toLong()) {
+                    Picasso.get().load(recipe?.url).into(view.recipe_image)
+                }
                 builder.setPositiveButton(android.R.string.ok, null)
                 builder.setNeutralButton("+", null)
                 builder.setNegativeButton(android.R.string.cancel, null)

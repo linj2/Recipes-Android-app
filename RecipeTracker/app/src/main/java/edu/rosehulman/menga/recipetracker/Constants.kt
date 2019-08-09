@@ -1,5 +1,7 @@
 package edu.rosehulman.menga.recipetracker
 
+import android.support.design.widget.BottomNavigationView
+
 object Constants {
     const val TAG = "RECIPES"
     const val MY_RECIPES = "me"

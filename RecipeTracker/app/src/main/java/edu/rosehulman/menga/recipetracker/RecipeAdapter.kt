@@ -92,5 +92,6 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
 
     interface OnRecipeSelectedListener {
         fun showRecipe(recipe: Recipe, previous: String, viewedBy: String = "")
+        fun setNavigation(id: Int)
     }
 }

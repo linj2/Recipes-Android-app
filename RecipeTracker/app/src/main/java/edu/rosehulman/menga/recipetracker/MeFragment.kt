@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.fragment_me.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
@@ -163,6 +164,7 @@ class MeFragment: Fragment() {
             }
             dialog.show()
         }
+//        listener?.setNavigation(R.id.nav_me)
         return view
     }
 
@@ -198,7 +200,7 @@ class MeFragment: Fragment() {
                     // authority declared in manifest
                     val photoURI: Uri = FileProvider.getUriForFile(
                         context!!,
-                        "edu.rosehulman.catchandkit",
+                        "edu.rosehulman.recipetracker",
                         it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)

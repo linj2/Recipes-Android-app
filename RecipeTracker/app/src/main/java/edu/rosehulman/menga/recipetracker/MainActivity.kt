@@ -20,8 +20,11 @@ class MainActivity : AppCompatActivity(),
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     var uid: String = ""
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
+    lateinit var navView: BottomNavigationView
     // Request code for launching the sign in Intent.
     private val RC_SIGN_IN = 1
+
+    var first = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -33,11 +36,13 @@ class MainActivity : AppCompatActivity(),
         FirebaseApp.initializeApp(this)
 
         //add selected listener for bottom navigation view
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(this)
 
+
         //set main fragment as default page
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && first) {
+            //first = false
             val fragment = PopularFragment.newInstance(uid)
             val ft = supportFragmentManager.beginTransaction()
             ft.add(R.id.fragment_container, fragment)
@@ -184,6 +189,10 @@ class MainActivity : AppCompatActivity(),
 
         // Create and launch sign-in intent
         startActivityForResult(loginIntent, RC_SIGN_IN)
+    }
+
+    override fun setNavigation(id: Int) {
+        navView.selectedItemId = id
     }
 }
 
