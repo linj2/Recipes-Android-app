@@ -23,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
@@ -76,7 +75,22 @@ class RecipeFragment: Fragment() {
             layout.removeView(view.findViewById(R.id.button_delete))
         }
         view.recipe_view_title.text = recipe?.title
-        view.ingredients_view.text = recipe?.ingredients.toString()
+        val holder = view.ingredients_holder
+        for(ingredient in recipe!!.ingredients) {
+            val textView = TextView(context)
+            textView.text = ingredient
+            val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                     ViewGroup.LayoutParams.WRAP_CONTENT)
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+            holder.addView(textView)
+        }
+//        val instructionsParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                                            ViewGroup.LayoutParams.WRAP_CONTENT)
+//        instructionsParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
+//        instructionsParams.addRule(RelativeLayout.BELOW, lastID)
+//        view.instructions_view.layoutParams = instructionsParams
+
+        //layout.removeView(curText)
         view.instructions_view.text = recipe?.instructions
         if(recipe?.picId != (-1).toLong()) {
             Picasso.get()
@@ -182,6 +196,7 @@ class RecipeFragment: Fragment() {
                 val instructionsText = view.findViewById<EditText>(R.id.instructions_edit_text)
                 instructionsText.text.insert(0, recipe?.instructions)
                 instructionsText.hint = context!!.resources.getString(R.string.instructions)
+                editTextIds.add(lastID)
                 for (ingredient in recipe?.ingredients ?: ArrayList()) {
                     view.findViewById<EditText>(lastID).text.insert(0, ingredient)
                     nextEditText = EditText(context)

@@ -5,12 +5,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
 >
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
     >
 
         <TextView
@@ -68,23 +71,23 @@
                 android:contentDescription="Placeholder for recipe image"
                 android:id="@+id/recipe_image_view"
         />
-        <TextView
+        <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ingredients"
-                android:id="@+id/ingredients_view"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/recipe_image_view"
-                android:contentDescription="may be replaced with recycler view holding ingredients - may want to wait on that"
-        />
+                android:id="@+id/ingredients_holder"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+        >
+
+        </LinearLayout>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/instructions_view"
                 android:layout_centerHorizontal="true"
                 android:text="Instructions"
-                android:layout_below="@+id/ingredients_view"
-                android:contentDescription="may want to change to recycler view or something which permits scrolling if this doesn't"
+                android:layout_below="@+id/ingredients_holder"
         />
         <Button
                 android:id="@+id/Button_show_comment"
