@@ -108,6 +108,7 @@ class RecipeFragment: Fragment() {
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).document(recipe!!.id).delete()
                             fragmentManager?.popBackStackImmediate()
+                            storageRef.child(recipe!!.picId.toString()).delete()
                         }
                         .setNegativeButton(android.R.string.no, null)
                     builder.create().show()

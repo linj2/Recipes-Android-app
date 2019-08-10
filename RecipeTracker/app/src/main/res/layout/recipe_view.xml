@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxHeight="200dp"
-                android:src="@drawable/ic_me"
+                android:src="@mipmap/ic_launcher"
                 android:layout_centerHorizontal="true"
                 android:contentDescription="Placeholder for recipe image"
                 android:id="@+id/recipe_image_view"
