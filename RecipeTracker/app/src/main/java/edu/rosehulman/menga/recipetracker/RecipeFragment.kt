@@ -46,6 +46,7 @@ class RecipeFragment: Fragment() {
     var url = ""
     var into: ImageView? = null
     private var picId: Long = -1
+    var willDelete: Long = -1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +91,6 @@ class RecipeFragment: Fragment() {
 //        instructionsParams.addRule(RelativeLayout.BELOW, lastID)
 //        view.instructions_view.layoutParams = instructionsParams
 
-        //layout.removeView(curText)
         view.instructions_view.text = recipe?.instructions
         if(recipe?.picId != (-1).toLong()) {
             Picasso.get()
@@ -185,6 +185,7 @@ class RecipeFragment: Fragment() {
                 builder.setNegativeButton(android.R.string.cancel, null)
                 view.recipe_image.setOnClickListener {
                     into = view.recipe_image
+                    willDelete = recipe!!.picId
                     showPictureDialog()
                 }
                 val titleEditText = view.findViewById<EditText>(R.id.edit_title)
@@ -247,13 +248,25 @@ class RecipeFragment: Fragment() {
                             val ingredient = view.findViewById<EditText>(id).text.toString()
                             ingredientList.add(ingredient)
                         }
-                        val r = Recipe(title, ingredientList, instructions, recipe!!.uid)
+                        if(picId == (-1).toLong()) {
+                            picId = recipe!!.picId
+                            url = recipe!!.url
+                        }
+                        val r = Recipe(title, ingredientList, instructions, recipe!!.uid, "", picId, url)
+                        url = ""
+                        into = null
+                        picId = -1
+                        willDelete = -1
                         FirebaseFirestore.getInstance().collection(Constants.RECIPES_PATH)
                             .document(recipe!!.id).set(r)
                         it.dismiss()
                     }
                     val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                     negativeButton.setOnClickListener { dialogView: View ->
+                        url = ""
+                        into = null
+                        picId = -1
+                        willDelete = -1
                         it.dismiss()
                     }
                 }
@@ -417,6 +430,9 @@ class RecipeFragment: Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
+            if(willDelete != (-1).toLong()) {
+                storageRef.child(willDelete.toString()).delete()
+            }
             when (requestCode) {
                 RC_TAKE_PICTURE -> {
                     sendCameraPhotoToAdapter()

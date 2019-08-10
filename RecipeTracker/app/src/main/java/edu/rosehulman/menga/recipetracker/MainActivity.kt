@@ -2,17 +2,21 @@ package edu.rosehulman.menga.recipetracker
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
@@ -34,6 +38,11 @@ class MainActivity : AppCompatActivity(),
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+//        val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                                 ViewGroup.LayoutParams.WRAP_CONTENT)
+//        params.addRule(RelativeLayout.BELOW, toolbar.id)
+//        fragment_container.layoutParams = params
         setSupportActionBar(toolbar)
         user = auth.currentUser!!
         initializeListeners()
