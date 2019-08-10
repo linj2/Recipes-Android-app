@@ -6,9 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
+class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val user: FirebaseUser): RecyclerView.Adapter<RecipeViewHolder>() {
     val popularRecipes = ArrayList<Pair<Recipe, Int>>()
 
     val recipeRef = FirebaseFirestore
@@ -50,6 +51,6 @@ class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeS
     }
 
     fun showRecipe(position: Int) {
-        listener.showRecipe(popularRecipes[position].first, Constants.POPULAR, uid)
+        listener.showRecipe(popularRecipes[position].first, Constants.POPULAR, user)
     }
 }

@@ -20,6 +20,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
@@ -41,8 +42,7 @@ private const val RC_CHOOSE_PICTURE = 2
 
 class MeFragment: Fragment() {
 
-    private val ARG_UID = "UID"
-    private var uid: String? = null
+    lateinit var user: FirebaseUser
     lateinit var adapter: RecipeAdapter
     private var listener: RecipeAdapter.OnRecipeSelectedListener? = null
     private var currentPhotoPath = ""
@@ -57,10 +57,10 @@ class MeFragment: Fragment() {
             .reference.child(Constants.IMAGES_PATH)
 
     companion object {
-        fun newInstance(uid: String) =
+        fun newInstance(user: FirebaseUser) =
             MeFragment().apply {
                 arguments = Bundle().apply {
-                    putString(Constants.ARG_UID, uid)
+                    putParcelable(Constants.ARG_USER, user)
                 }
             }
     }
@@ -83,7 +83,7 @@ class MeFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
-            uid = it?.getString(Constants.ARG_UID)
+            user = it?.getParcelable(Constants.ARG_USER)!!
         }
     }
 
@@ -98,7 +98,7 @@ class MeFragment: Fragment() {
 //            }
 //            ft.commit()
 //        }
-        adapter = RecipeAdapter(context!!, listener!!,  uid!!)
+        adapter = RecipeAdapter(context!!, listener!!,  user)
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
         view.recycler_view.setHasFixedSize(true)
@@ -146,7 +146,7 @@ class MeFragment: Fragment() {
                         val ingredient = view.findViewById<EditText>(id).text.toString()
                         ingredientList.add(ingredient)
                     }
-                    val recipe = Recipe(title, ingredientList, instructions, uid!!, "", picId, url)
+                    val recipe = Recipe(title, ingredientList, instructions, user.uid, "", picId, url)
                     url = ""
                     adapter.add(recipe)
                     into = null

@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
@@ -39,7 +40,7 @@ private const val RC_CHOOSE_PICTURE = 2
 class RecipeFragment: Fragment() {
     var recipe: Recipe? = null
     var previous: String? = null
-    var viewedBy: String? = null
+    private lateinit var viewedBy: FirebaseUser
     val storageRef = FirebaseStorage.getInstance().reference.child(Constants.IMAGES_PATH)
 
     private var currentPhotoPath = ""
@@ -53,7 +54,7 @@ class RecipeFragment: Fragment() {
         arguments.let {
             recipe = it?.getParcelable(Constants.ARG_RECIPE)
             previous = it?.getString(Constants.ARG_PREVIOUS)
-            viewedBy = it?.getString(Constants.VIEWED_BY)
+            viewedBy = it?.getParcelable(Constants.ARG_USER)!!
         }
     }
 
@@ -63,7 +64,7 @@ class RecipeFragment: Fragment() {
         //comment button
         val showCommentB = view.findViewById<Button>(R.id.Button_show_comment)
         showCommentB.setOnClickListener {
-            val switchTo = CommentsFragment.newInstance(viewedBy!!,recipe!!.id)
+            val switchTo = CommentsFragment.newInstance(viewedBy,recipe!!.id)
             val ft = activity!!.supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo)
             ft.addToBackStack(Constants.COMMENT)
@@ -71,7 +72,7 @@ class RecipeFragment: Fragment() {
         }
 
         val layout = view.findViewById<RelativeLayout>(R.id.holder_buttons)
-        if (previous == Constants.SEARCH && viewedBy != recipe?.uid) {
+        if (previous == Constants.SEARCH && viewedBy.uid != recipe?.uid) {
             layout.removeView(view.findViewById(R.id.button_delete))
         }
         view.recipe_view_title.text = recipe?.title
@@ -82,11 +83,11 @@ class RecipeFragment: Fragment() {
                 .load(recipe?.url)
                 .into(view.recipe_image_view)
         }
-        if (previous != Constants.SEARCH || viewedBy == recipe?.uid) {
+        if (previous != Constants.SEARCH || viewedBy.uid == recipe?.uid) {
             view.button_delete.setOnLongClickListener {
-                if (viewedBy != recipe?.uid && previous != Constants.FAVORITE) {
+                if (viewedBy.uid != recipe?.uid && previous != Constants.FAVORITE) {
                     Toast.makeText(context, "You can't delete others' recipes!", Toast.LENGTH_SHORT).show()
-                } else if(viewedBy != recipe?.uid && previous == Constants.FAVORITE) {
+                } else if(viewedBy.uid != recipe?.uid && previous == Constants.FAVORITE) {
                     val builder = AlertDialog.Builder(context!!)
                     builder
                         .setMessage("Are you sure you want to delete this recipe?")
@@ -117,7 +118,7 @@ class RecipeFragment: Fragment() {
             Log.d(Constants.TAG, "back to $previous")
             when (previous) {
                 Constants.MY_RECIPES -> {
-                    val switchTo = MeFragment.newInstance(viewedBy!!)
+                    val switchTo = MeFragment.newInstance(viewedBy)
                     val ft = activity!!.supportFragmentManager.beginTransaction()
                     ft.replace(R.id.fragment_container, switchTo)
                     activity!!.supportFragmentManager.popBackStackImmediate()
@@ -126,14 +127,14 @@ class RecipeFragment: Fragment() {
 //                    nav_view.selectedItemId=R.id.nav_me
                 }
                 Constants.POPULAR -> {
-                    val switchTo = PopularFragment.newInstance(viewedBy!!)
+                    val switchTo = PopularFragment.newInstance(viewedBy)
                     val ft = activity!!.supportFragmentManager.beginTransaction()
                     ft.replace(R.id.fragment_container, switchTo)
                     activity!!.supportFragmentManager.popBackStackImmediate()
                     ft.commit()
                 }
                 Constants.FAVORITE -> {
-                    val switchTo = FavoriteFragment.newInstance(viewedBy!!)
+                    val switchTo = FavoriteFragment.newInstance(viewedBy)
                     val ft = activity!!.supportFragmentManager.beginTransaction()
                     ft.replace(R.id.fragment_container, switchTo)
                     activity!!.supportFragmentManager.popBackStackImmediate()
@@ -147,7 +148,7 @@ class RecipeFragment: Fragment() {
                     ft.commit()
                 }
                 Constants.COMMENT -> {
-                    val switchTo = CommentsFragment.newInstance(viewedBy!!,recipe!!.id)
+                    val switchTo = CommentsFragment.newInstance(viewedBy, recipe!!.id)
                     val ft = activity!!.supportFragmentManager.beginTransaction()
                     ft.replace(R.id.fragment_container, switchTo)
                     activity!!.supportFragmentManager.popBackStackImmediate()
@@ -155,7 +156,7 @@ class RecipeFragment: Fragment() {
                 }
             }
         }
-        if(viewedBy == recipe?.uid) {
+        if(viewedBy.uid == recipe?.uid) {
             view.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
                 val editTextIds = ArrayList<Int>()
@@ -308,7 +309,7 @@ class RecipeFragment: Fragment() {
                 recipesRef.get().addOnSuccessListener {
                     for(doc in it.documents) {
                         val cur = Recipe.fromSnapshot(doc)
-                        if(cur.favoriteOf == viewedBy && cur.equals(r)) {
+                        if(cur.favoriteOf == viewedBy.uid && cur.equals(r)) {
                             contains = true
                         }
                     }
@@ -436,7 +437,7 @@ class RecipeFragment: Fragment() {
 
     private fun favorite(view: View, r: Recipe) {
         view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
-        r.favoriteOf = viewedBy!!
+        r.favoriteOf = viewedBy.uid
         FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).add(r)
     }
 
@@ -445,7 +446,7 @@ class RecipeFragment: Fragment() {
         FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).get().addOnSuccessListener {
             for(doc in it.documents) {
                 val cur = Recipe.fromSnapshot(doc)
-                if(viewedBy == cur.favoriteOf && r.equals(cur)) {
+                if(viewedBy.uid == cur.favoriteOf && r.equals(cur)) {
                     FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).document(doc.id).delete()
                     break
                 }
@@ -509,14 +510,12 @@ class RecipeFragment: Fragment() {
     }
 
     companion object {
-        fun newInstance(recipe: Recipe, previousFragment: String, viewedBy: String = "") =
+        fun newInstance(recipe: Recipe, previousFragment: String, viewedBy: FirebaseUser) =
             RecipeFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(Constants.ARG_RECIPE, recipe)
                     putString(Constants.ARG_PREVIOUS, previousFragment)
-                    if(viewedBy != "") {
-                        putString(Constants.VIEWED_BY, viewedBy)
-                    }
+                    putParcelable(Constants.ARG_USER, viewedBy)
                 }
             }
     }

@@ -19,18 +19,19 @@ import com.google.firebase.database.FirebaseDatabase
 import android.app.Activity
 import android.support.v4.content.ContextCompat.getSystemService
 import android.view.inputmethod.InputMethodManager
+import com.google.firebase.auth.FirebaseUser
 
 
 class SearchFragment: Fragment() {
-    private var uid: String? = null
+    private lateinit var user: FirebaseUser
     private var listener: RecipeAdapter.OnRecipeSelectedListener? = null
     lateinit var adapter: SearchAdapter
 
     companion object {
-        fun newInstance(uid: String) =
+        fun newInstance(user: FirebaseUser) =
             SearchFragment().apply {
                 arguments = Bundle().apply {
-                    putString(Constants.ARG_UID, uid)
+                    putParcelable(Constants.ARG_USER, user)
                 }
             }
     }
@@ -53,7 +54,7 @@ class SearchFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
-            uid = it?.getString(Constants.ARG_UID)
+            user = it?.getParcelable(Constants.ARG_USER)!!
         }
     }
 
@@ -74,7 +75,7 @@ class SearchFragment: Fragment() {
 
             val query = searchBar.text.toString()
             //firebaseRecipeSearch(query)
-            adapter = SearchAdapter(context!!,  listener!!, uid!!)
+            adapter = SearchAdapter(context!!,  listener!!, user)
 
             //may need to research search algorithms
             view.recycler_view.setBackgroundColor(resources.getColor(R.color.colorBackground))

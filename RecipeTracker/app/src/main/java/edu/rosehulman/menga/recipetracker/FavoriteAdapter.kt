@@ -5,10 +5,11 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 
-class FavoriteAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
+class FavoriteAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val user: FirebaseUser): RecyclerView.Adapter<RecipeViewHolder>() {
     val recipes = ArrayList<Recipe>()
     val recipesRef = FirebaseFirestore.getInstance().collection(Constants.USERS_PATH)
 
@@ -18,7 +19,7 @@ class FavoriteAdapter(var context: Context, val listener: RecipeAdapter.OnRecipe
     }
 
     init {
-        recipesRef.whereEqualTo("favoriteOf", uid).get().addOnSuccessListener {
+        recipesRef.whereEqualTo("favoriteOf", user.uid).get().addOnSuccessListener {
             for(doc in it.documents) {
                 val recipe = Recipe.fromSnapshot(doc)
                 var unique = true
@@ -48,7 +49,7 @@ class FavoriteAdapter(var context: Context, val listener: RecipeAdapter.OnRecipe
     }
 
     fun showRecipe(index: Int) {
-        listener.showRecipe(recipes[index], Constants.FAVORITE, uid)
+        listener.showRecipe(recipes[index], Constants.FAVORITE, user)
     }
 
 }

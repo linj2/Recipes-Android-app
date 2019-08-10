@@ -9,22 +9,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.fragment_popular.view.recycler_view
 
 //private const val ARG_COLUMNS = "ARG_COLUMNS"
 
 class PopularFragment : Fragment() {
-    private var uid: String? = null
+    private lateinit var user: FirebaseUser
     private var columns: Int = 2
     private var listener: RecipeAdapter.OnRecipeSelectedListener? = null
     lateinit var adapter: PopularAdapter
     private lateinit var rootView: RecyclerView
 
     companion object {
-        fun newInstance(uid: String) =
+        fun newInstance(user: FirebaseUser) =
             PopularFragment().apply {
                 arguments = Bundle().apply {
-                    putString(Constants.ARG_UID, uid)
+                    putParcelable(Constants.ARG_USER, user)
                 }
             }
     }
@@ -32,9 +33,9 @@ class PopularFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
-            uid = it?.getString(Constants.ARG_UID)
+            user = it?.getParcelable(Constants.ARG_USER)!!
         }
-        adapter = PopularAdapter(context!!, listener!!,uid!!)
+        adapter = PopularAdapter(context!!, listener!!,user)
     }
 
     override fun onAttach(context: Context?) {

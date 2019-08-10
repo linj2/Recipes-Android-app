@@ -9,22 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 
 const val ARG_UID = "uid"
-const val ARG_RID = "recipeID"
 
 class CommentsFragment : Fragment() {
-    private var uid: String? = null
+    private lateinit var user: FirebaseUser
     private var recipeID:String? = null
     lateinit var adapter:CommentAdapter
 
     companion object {
-        fun newInstance(uid: String,recipeID:String) =
+        fun newInstance(user: FirebaseUser, recipeID:String) =
             CommentsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_UID, uid)
-                    putString(ARG_RID,recipeID)
+                    putParcelable(Constants.ARG_USER, user)
+                    putString(Constants.ARG_RID,recipeID)
                 }
             }
     }
@@ -32,15 +32,15 @@ class CommentsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
-            uid = it?.getString(ARG_UID)
-            recipeID = it?.getString(ARG_RID)
+            user = it?.getParcelable(Constants.ARG_USER)!!
+            recipeID = it?.getString(Constants.ARG_RID)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_comments, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.comment_recycler_view)
-        val adapter = CommentAdapter(context,(context as MainActivity).uid)
+        val adapter = CommentAdapter(context,(context as MainActivity).user) //or just user
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
@@ -48,7 +48,7 @@ class CommentsFragment : Fragment() {
         val commentButton = view.findViewById<Button>(R.id.comment_button)
         commentButton.setOnClickListener {
             val content =view.findViewById<EditText>(R.id.comment_EditText).text.toString()
-            val comment = Comment(content, uid, recipeID)
+            val comment = Comment(content, user.uid, recipeID, user.displayName!!)
             adapter.add(comment)
         }
         return view

@@ -9,15 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseUser
 
 class HomeFragment:Fragment() {
-    private var uid: String? = null
+    private lateinit var user: FirebaseUser
 
     companion object {
-        fun newInstance(uid: String) =
+        fun newInstance(user: FirebaseUser) =
             HomeFragment().apply {
                 arguments = Bundle().apply {
-                    putString(Constants.ARG_UID, uid)
+                    putParcelable(Constants.ARG_USER, user)
                 }
             }
     }
@@ -25,7 +26,7 @@ class HomeFragment:Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
-            uid = it?.getString(Constants.ARG_UID)
+            user = it?.getParcelable(Constants.ARG_USER)!!
         }
     }
 

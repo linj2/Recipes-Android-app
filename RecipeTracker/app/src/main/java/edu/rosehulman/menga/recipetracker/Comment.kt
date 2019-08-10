@@ -9,9 +9,10 @@ import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Comment(var content: String?="",
-                   val uid:String?="",
-                   val recipeId:String?=""):Parcelable {
+data class Comment(var content: String? = "",
+                   val uid: String? = "",
+                   val recipeId: String? = "",
+                   var userName: String = ""):Parcelable {
     @get:Exclude var id =""
     @ServerTimestamp var timeStamp: Timestamp? = null
 

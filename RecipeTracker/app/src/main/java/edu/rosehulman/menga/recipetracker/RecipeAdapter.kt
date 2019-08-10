@@ -5,9 +5,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener, val uid: String): RecyclerView.Adapter<RecipeViewHolder>() {
+class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener, val user: FirebaseUser): RecyclerView.Adapter<RecipeViewHolder>() {
     var recipes = ArrayList<Recipe>()
     val recipeRef = FirebaseFirestore
         .getInstance()
@@ -17,7 +18,7 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     fun update() {
         recipeRef
             //.whereEqualTo("uid", uid).orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).get()
-            .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).whereEqualTo("uid", uid).get()
+            .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING).whereEqualTo("uid", user.uid).get()
             .addOnSuccessListener {
             recipes.clear()
             for(doc in it.documents) {
@@ -43,7 +44,7 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
                 return@addSnapshotListener
             }
             for (documentChange in snapshot!!.documentChanges) {
-                if(documentChange.document["uid"] != uid) {
+                if(documentChange.document["uid"] != user.uid) {
                     return@addSnapshotListener
                 }
                 val recipe = Recipe.fromSnapshot(documentChange.document)
@@ -69,7 +70,7 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     }
 
     fun showRecipe(position: Int) {
-        listener.showRecipe(recipes[position], Constants.MY_RECIPES, uid)
+        listener.showRecipe(recipes[position], Constants.MY_RECIPES, user)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
@@ -91,7 +92,7 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     }
 
     interface OnRecipeSelectedListener {
-        fun showRecipe(recipe: Recipe, previous: String, viewedBy: String = "")
+        fun showRecipe(recipe: Recipe, previous: String, viewedBy: FirebaseUser)
         fun setNavigation(id: Int)
     }
 }

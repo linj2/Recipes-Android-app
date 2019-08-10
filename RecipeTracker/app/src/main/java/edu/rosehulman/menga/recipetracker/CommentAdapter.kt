@@ -8,9 +8,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class CommentAdapter(var context: Context?, val uid: String) : RecyclerView.Adapter<CommentViewHolder>() {
+class CommentAdapter(var context: Context?, val user: FirebaseUser) : RecyclerView.Adapter<CommentViewHolder>() {
     val comments = ArrayList<Comment>()
     val commentRef = FirebaseFirestore
         .getInstance()
@@ -26,7 +27,7 @@ class CommentAdapter(var context: Context?, val uid: String) : RecyclerView.Adap
                     return@addSnapshotListener
                 }
                 for (documentChange in snapshot!!.documentChanges) {
-                    if(documentChange.document["uid"] != uid) {
+                    if(documentChange.document["uid"] != user.uid) {
                         return@addSnapshotListener
                     }
                     val comment = Comment.fromSnapshot(documentChange.document)
@@ -67,7 +68,7 @@ class CommentAdapter(var context: Context?, val uid: String) : RecyclerView.Adap
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.dialog_edit_title)
 
-        val commentEditText:EditText = EditText(context)
+        val commentEditText = EditText(context)
         commentEditText.setText(comments[position].content)
 
         builder.setPositiveButton(android.R.string.ok){_, _ ->

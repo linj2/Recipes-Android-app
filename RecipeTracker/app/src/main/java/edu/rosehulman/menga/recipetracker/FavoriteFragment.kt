@@ -8,18 +8,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 
 class FavoriteFragment:Fragment() {
-    private val ARG_UID: String = "UID"
-    var uid: String? = null
+    private lateinit var user: FirebaseUser
     var listener: RecipeAdapter.OnRecipeSelectedListener? = null
     lateinit var adapter: FavoriteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments.let {
-            uid = it?.getString(ARG_UID)
+            user = it?.getParcelable(Constants.ARG_USER)!!
         }
     }
 
@@ -35,7 +35,7 @@ class FavoriteFragment:Fragment() {
 //            ft.commit()
 //        }
 
-        adapter = FavoriteAdapter(context!!, listener!!, uid!!)
+        adapter = FavoriteAdapter(context!!, listener!!, user)
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
         view.recycler_view.setHasFixedSize(true)
@@ -58,10 +58,10 @@ class FavoriteFragment:Fragment() {
     }
 
     companion object {
-        fun newInstance(uid: String) =
+        fun newInstance(user: FirebaseUser) =
             FavoriteFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_UID, uid)
+                    putParcelable(Constants.ARG_USER, user)
                 }
             }
     }
