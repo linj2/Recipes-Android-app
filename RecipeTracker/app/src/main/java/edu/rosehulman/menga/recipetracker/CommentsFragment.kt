@@ -50,6 +50,7 @@ class CommentsFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
+        adapter.update()
 
         val commentButton = view.findViewById<Button>(R.id.comment_button)
         val commentEditText = view.findViewById<EditText>(R.id.comment_EditText)
