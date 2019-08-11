@@ -43,6 +43,8 @@ class RecipeFragment: Fragment() {
     private lateinit var viewedBy: FirebaseUser
     val storageRef = FirebaseStorage.getInstance().reference.child(Constants.IMAGES_PATH)
 
+
+
     private var currentPhotoPath = ""
     var url = ""
     var into: ImageView? = null
@@ -59,11 +61,24 @@ class RecipeFragment: Fragment() {
         }
     }
 
+    fun updateView() {
+        val holder = view!!.findViewById<LinearLayout>(R.id.ingredients_holder)
+        holder.removeAllViews()
+        for(ingredient in recipe!!.ingredients) {
+            val textView = TextView(context)
+            textView.text = ingredient
+            val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+            holder.addView(textView)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.recipe_view, container, false)
 
         //comment button
-        val showCommentB = view.findViewById<Button>(R.id.Button_show_comment)
+        val showCommentB = view!!.findViewById<Button>(R.id.Button_show_comment)
         showCommentB.setOnClickListener {
             val switchTo = CommentsFragment.newInstance(viewedBy,recipe!!.id)
             val ft = activity!!.supportFragmentManager.beginTransaction()
@@ -72,12 +87,12 @@ class RecipeFragment: Fragment() {
             ft.commit()
         }
 
-        val layout = view.findViewById<RelativeLayout>(R.id.holder_buttons)
+        val layout = view!!.findViewById<RelativeLayout>(R.id.holder_buttons)
         if ((previous == Constants.SEARCH || previous == Constants.POPULAR) && viewedBy.uid != recipe?.uid) {
-            layout.removeView(view.findViewById(R.id.button_delete))
+            layout.removeView(view!!.findViewById(R.id.button_delete))
         }
-        view.recipe_view_title.text = recipe?.title
-        val holder = view.ingredients_holder
+        view!!.recipe_view_title.text = recipe?.title
+        val holder = view!!.ingredients_holder
         for(ingredient in recipe!!.ingredients) {
             val textView = TextView(context)
             textView.text = ingredient
@@ -92,17 +107,17 @@ class RecipeFragment: Fragment() {
 //        instructionsParams.addRule(RelativeLayout.BELOW, lastID)
 //        view.instructions_view.layoutParams = instructionsParams
 
-        view.instructions_view.text = recipe?.instructions
+        view!!.instructions_view.text = recipe?.instructions
         if(recipe?.picId != (-1).toLong()) {
             Picasso.get()
                 .load(recipe?.url)
-                .into(view.recipe_image_view)
+                .into(view!!.recipe_image_view)
         }
         if(previous == Constants.FAVORITE) {
-            view.button_delete.text = context!!.resources.getString(R.string.remove)
+            view!!.button_delete.text = context!!.resources.getString(R.string.remove)
         }
         if ((previous != Constants.SEARCH && previous != Constants.POPULAR) || viewedBy.uid == recipe?.uid) {
-            view.button_delete.setOnLongClickListener {
+            view!!.button_delete.setOnLongClickListener {
                 if (viewedBy.uid != recipe?.uid && previous != Constants.FAVORITE) {
                     Toast.makeText(context, context!!.resources.getString(R.string.remove_warning), Toast.LENGTH_SHORT).show()
                 } else if(previous == Constants.FAVORITE) {
@@ -133,7 +148,7 @@ class RecipeFragment: Fragment() {
                 true
             }
         }
-        view.button_return.setOnClickListener {
+        view!!.button_return.setOnClickListener {
             Log.d(Constants.TAG, "back to $previous")
             when (previous) {
                 Constants.MY_RECIPES -> {
@@ -176,7 +191,7 @@ class RecipeFragment: Fragment() {
             }
         }
         if(viewedBy.uid == recipe?.uid) {
-            view.button_edit_recipe.setOnClickListener {
+            view!!.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
                 val editTextIds = ArrayList<Int>()
                 // Set options
@@ -251,7 +266,9 @@ class RecipeFragment: Fragment() {
                         val ingredientList = ArrayList<String>()
                         for (id in editTextIds) {
                             val ingredient = view.findViewById<EditText>(id).text.toString()
-                            ingredientList.add(ingredient)
+                            if(ingredient != "") {
+                                ingredientList.add(ingredient)
+                            }
                         }
                         if(picId == (-1).toLong()) {
                             picId = recipe!!.picId
@@ -265,6 +282,8 @@ class RecipeFragment: Fragment() {
                         FirebaseFirestore.getInstance().collection(Constants.RECIPES_PATH)
                             .document(recipe!!.id).set(r)
                         it.dismiss()
+                        recipe = r
+                        updateView()
                     }
                     val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                     negativeButton.setOnClickListener { dialogView: View ->
@@ -328,17 +347,17 @@ class RecipeFragment: Fragment() {
                         recipes.add(recipe)
                     }
                 }
-                view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
+                view!!.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
                 for(r2 in recipes) {
                     if (r.equals(r2)) {
-                        view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
+                        view!!.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
                         break
                     }
                 }
-                view.button_edit_recipe.text = ""
+                view!!.button_edit_recipe.text = ""
                 if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
-                    view.button_return.height *= 2
-                    view.button_edit_recipe.height *= 2
+                    view!!.button_return.height *= 2
+                    view!!.button_edit_recipe.height *= 2
                 }
                 var contains = false
                 recipesRef.get().addOnSuccessListener {
@@ -349,14 +368,14 @@ class RecipeFragment: Fragment() {
                         }
                     }
                 }
-                view.button_edit_recipe.setOnLongClickListener {
+                view!!.button_edit_recipe.setOnLongClickListener {
                     if (contains) {
                         contains = false
-                        unFavorite(view, r)
+                        unFavorite(view!!, r)
                     }
                     else {
                         contains = true
-                        favorite(view, r)
+                        favorite(view!!, r)
                     }
                     true
                 }
@@ -473,7 +492,6 @@ class RecipeFragment: Fragment() {
         }
 
         override fun onPostExecute(bitmap: Bitmap?) {
-            // TODO: Write and call a new storageAdd() method with the url and bitmap
             // that uses Firebase storage.
             // https://firebase.google.com/docs/storage/android/upload-files
             storageAdd(localPath, bitmap)
