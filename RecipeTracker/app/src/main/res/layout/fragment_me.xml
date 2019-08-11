@@ -12,7 +12,8 @@
             android:id="@+id/my_recipes_title"
             android:text="@string/my_recipes_title"
             android:layout_centerHorizontal="true"
-            android:textSize="24sp"
+            android:textSize="36sp"
+            android:layout_marginBottom="16dp"
             android:textStyle="bold"
     />
     <Button
@@ -22,6 +23,7 @@
             android:text="@string/add_a_recipe"
             android:layout_below="@+id/my_recipes_title"
             android:layout_alignParentStart="true"
+            android:textColor="#b000"
             android:contentDescription="could be replaced with fab"
     />
     <android.support.v7.widget.RecyclerView
@@ -35,7 +37,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:showIn="@layout/activity_main"
             android:padding="8dp"
-            android:background="@color/colorBackground"
+            android:background="@color/icLight"
             tools:context=".MainActivity">
 
     </android.support.v7.widget.RecyclerView>

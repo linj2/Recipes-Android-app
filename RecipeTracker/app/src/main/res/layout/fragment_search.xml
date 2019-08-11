@@ -15,6 +15,7 @@
             android:id="@+id/button_execute_search"
             android:layout_below="@+id/edit_text_search"
             android:layout_alignParentLeft="true"
+            android:layout_marginBottom="24dp"
             android:text="@string/search"
     />
     <android.support.v7.widget.RecyclerView

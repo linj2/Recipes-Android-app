@@ -10,14 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.RelativeLayout
 import android.widget.Toast
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import com.google.firebase.database.FirebaseDatabase
 import android.app.Activity
-import android.support.v4.content.ContextCompat.getSystemService
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.auth.FirebaseUser
 
@@ -78,7 +76,7 @@ class SearchFragment: Fragment() {
             adapter = SearchAdapter(context!!,  listener!!, user)
 
             //may need to research search algorithms
-            view.recycler_view.setBackgroundColor(resources.getColor(R.color.colorBackground))
+            view.recycler_view.setBackgroundColor(resources.getColor(R.color.icLight))
             view.recycler_view.adapter = adapter
             adapter.executeSearch(query)
             view.recycler_view.layoutManager = LinearLayoutManager(context)

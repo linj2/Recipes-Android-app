@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.dialog_edit_recipe.*
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
@@ -32,7 +30,6 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 private const val RC_TAKE_PICTURE = 1
@@ -62,7 +59,7 @@ class RecipeFragment: Fragment() {
         }
     }
 
-    fun updateView() {
+    private fun updateView() {
         val holder = view!!.findViewById<LinearLayout>(R.id.ingredients_holder)
         holder.removeAllViews()
         for(ingredient in recipe!!.ingredients) {
@@ -77,7 +74,7 @@ class RecipeFragment: Fragment() {
             //remove old onClickListener
         }
         view!!.button_edit_recipe.setOnLongClickListener {
-            Toast.makeText(context, "return later to edit again", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context!!.resources.getString(R.string.edit_warning), Toast.LENGTH_SHORT).show()
             true
         }
         view!!.instructions_view.text = recipe!!.instructions
@@ -97,19 +94,19 @@ class RecipeFragment: Fragment() {
             ft.commit()
         }
 
-        val layout = view.findViewById<LinearLayout>(R.id.holder_buttons)
+        val buttonHolder = view.findViewById<LinearLayout>(R.id.holder_buttons)
         if ((previous == Constants.SEARCH || previous == Constants.POPULAR) && viewedBy.uid != recipe?.uid) {
-            layout.removeView(view.findViewById(R.id.button_delete))
+            buttonHolder.removeView(view.findViewById(R.id.button_delete))
         }
-        view!!.recipe_view_title.text = recipe?.title
-        val holder = view!!.ingredients_holder
+        view.recipe_view_title.text = recipe?.title
+        val ingredientsHolder = view.ingredients_holder
         for(ingredient in recipe!!.ingredients) {
             val textView = TextView(context)
             textView.text = ingredient
             val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                      ViewGroup.LayoutParams.WRAP_CONTENT)
             params.addRule(RelativeLayout.CENTER_HORIZONTAL)
-            holder.addView(textView)
+            ingredientsHolder.addView(textView)
         }
 //        val instructionsParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
 //                                                            ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -117,17 +114,17 @@ class RecipeFragment: Fragment() {
 //        instructionsParams.addRule(RelativeLayout.BELOW, lastID)
 //        view.instructions_view.layoutParams = instructionsParams
 
-        view!!.instructions_view.text = recipe?.instructions
+        view.instructions_view.text = recipe?.instructions
         if(recipe?.picId != (-1).toLong()) {
             Picasso.get()
                 .load(recipe?.url)
-                .into(view!!.recipe_image_view)
+                .into(view.recipe_image_view)
         }
         if(previous == Constants.FAVORITE) {
-            view!!.button_delete.text = context!!.resources.getString(R.string.remove)
+            view.button_delete.text = context!!.resources.getString(R.string.remove)
         }
         if ((previous != Constants.SEARCH && previous != Constants.POPULAR) || viewedBy.uid == recipe?.uid) {
-            view!!.button_delete.setOnLongClickListener {
+            view.button_delete.setOnLongClickListener {
                 if (viewedBy.uid != recipe?.uid && previous != Constants.FAVORITE) {
                     Toast.makeText(context, context!!.resources.getString(R.string.remove_warning), Toast.LENGTH_SHORT).show()
                 } else if(previous == Constants.FAVORITE) {
@@ -201,35 +198,35 @@ class RecipeFragment: Fragment() {
 //            }
 //        }
         if(viewedBy.uid == recipe?.uid) {
-            view!!.button_edit_recipe.setOnClickListener {
+            view.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
                 val editTextIds = ArrayList<Int>()
                 // Set options
-                val view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
-                builder.setView(view)
+                val ret = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
+                builder.setView(ret)
                 if(recipe?.picId!=(-1).toLong()) {
-                    Picasso.get().load(recipe?.url).into(view.recipe_image)
+                    Picasso.get().load(recipe?.url).into(ret.recipe_image)
                 }
                 builder.setPositiveButton(android.R.string.ok, null)
                 builder.setNeutralButton(context!!.resources.getString(R.string.plus), null)
                 builder.setNegativeButton(android.R.string.cancel, null)
-                view.recipe_image.setOnClickListener {
-                    into = view.recipe_image
+                ret.recipe_image.setOnClickListener {
+                    into = ret.recipe_image
                     willDelete = recipe!!.picId
                     showPictureDialog()
                 }
-                val titleEditText = view.findViewById<EditText>(R.id.edit_title)
+                val titleEditText = ret.findViewById<EditText>(R.id.edit_title)
                 titleEditText.setText(recipe?.title)
                 val dialog = builder.create()
-                val layout = view.findViewById<RelativeLayout>(R.id.edit_recipe_layout)
+                val layout = ret.findViewById<RelativeLayout>(R.id.edit_recipe_layout)
                 var lastID = R.id.ingredients_edit_text
                 var nextEditText = EditText(context)
-                val instructionsText = view.findViewById<EditText>(R.id.instructions_edit_text)
+                val instructionsText = ret.findViewById<EditText>(R.id.instructions_edit_text)
                 instructionsText.text.insert(0, recipe?.instructions)
                 instructionsText.hint = context!!.resources.getString(R.string.instructions)
                 editTextIds.add(lastID)
                 for (ingredient in recipe?.ingredients ?: ArrayList()) {
-                    view.findViewById<EditText>(lastID).text.insert(0, ingredient)
+                    ret.findViewById<EditText>(lastID).text.insert(0, ingredient)
                     nextEditText = EditText(context)
                     nextEditText.id = View.generateViewId()
                     nextEditText.hint = context!!.resources.getString(R.string.ingredient)
@@ -272,10 +269,10 @@ class RecipeFragment: Fragment() {
                     val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                     positiveButton.setOnClickListener { dialogView: View ->
                         val title = titleEditText.text.toString()
-                        val instructions = view.instructions_edit_text.text.toString()
+                        val instructions = ret.instructions_edit_text.text.toString()
                         val ingredientList = ArrayList<String>()
                         for (id in editTextIds) {
-                            val ingredient = view.findViewById<EditText>(id).text.toString()
+                            val ingredient = ret.findViewById<EditText>(id).text.toString()
                             if(ingredient != "") {
                                 ingredientList.add(ingredient)
                             }
@@ -357,14 +354,14 @@ class RecipeFragment: Fragment() {
                         recipes.add(recipe)
                     }
                 }
-                view!!.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
+                view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
                 for(r2 in recipes) {
                     if (r.equals(r2)) {
-                        view!!.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
+                        view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
                         break
                     }
                 }
-                view!!.button_edit_recipe.text = ""
+                view.button_edit_recipe.text = ""
                 if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
 //                    view.button_return.height *= 2
                     view.button_edit_recipe.height *= 2
@@ -508,10 +505,10 @@ class RecipeFragment: Fragment() {
             storageAdd(localPath, bitmap)
         }
 
-        fun storageAdd(myPath: String, bitmap: Bitmap?): String? {
-            val baos = ByteArrayOutputStream()
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val bytes = baos.toByteArray()
+        private fun storageAdd(myPath: String, bitmap: Bitmap?): String? {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            val bytes = byteArrayOutputStream.toByteArray()
             val id = Math.abs(Random.nextLong()).toString()
             var uploadTask = storageRef.child(id).putBytes(bytes)
             uploadTask.addOnFailureListener {
