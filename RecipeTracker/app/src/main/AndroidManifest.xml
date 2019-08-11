@@ -13,6 +13,7 @@
                 android:name=".MainActivity"
                 android:label="Recipe Tracker"
                 android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustPan"
         >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
