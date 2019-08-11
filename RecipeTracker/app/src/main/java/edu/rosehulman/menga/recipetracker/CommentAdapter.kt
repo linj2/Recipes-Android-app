@@ -27,7 +27,7 @@ class CommentAdapter(var context: Context?, val user: FirebaseUser, val recipeID
                     return@addSnapshotListener
                 }
                 for (documentChange in snapshot!!.documentChanges) {
-                    if(documentChange.document["uid"] != user.uid) {
+                    if(documentChange.document["recipeId"] != recipeID) {
                         return@addSnapshotListener
                     }
                     val comment = Comment.fromSnapshot(documentChange.document)
@@ -49,7 +49,21 @@ class CommentAdapter(var context: Context?, val user: FirebaseUser, val recipeID
                     }
                 }
             }
+        update()
+    }
 
+    fun update() {
+        commentRef
+            .orderBy(Comment.CREATION_KEY, Query.Direction.DESCENDING)
+            .whereEqualTo("recipeId", recipeID).get()
+            .addOnSuccessListener {
+                comments.clear()
+                for(doc in it.documents) {
+                    val comment = Comment.fromSnapshot(doc)
+                    comments.add(comment)
+                }
+                notifyDataSetChanged()
+            }
     }
 
     override fun getItemCount() = comments.size
@@ -79,24 +93,22 @@ class CommentAdapter(var context: Context?, val user: FirebaseUser, val recipeID
         }
         builder.setNeutralButton(context?.getString(R.string.delete)){_,_ ->
             remove(position)
+            notifyItemRemoved(position)
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
     }
     private fun remove(position: Int){
         commentRef.document(comments[position].id).delete()
-        notifyItemRemoved(position)
     }
 
     private  fun edit(position: Int,content:String){
         comments[position].content = content
         commentRef.document(comments[position].id).set(comments[position])
-        notifyItemChanged(position)
     }
 
     fun add(comment: Comment) {
         commentRef.add(comment)
-        notifyItemInserted(0)
     }
 
     fun authMessage() {
