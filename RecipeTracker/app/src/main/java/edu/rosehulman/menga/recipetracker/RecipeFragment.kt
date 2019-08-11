@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.dialog_edit_recipe.*
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
@@ -72,6 +73,15 @@ class RecipeFragment: Fragment() {
             params.addRule(RelativeLayout.CENTER_HORIZONTAL)
             holder.addView(textView)
         }
+        view!!.button_edit_recipe.setOnClickListener {
+            //remove old onClickListener
+        }
+        view!!.button_edit_recipe.setOnLongClickListener {
+            Toast.makeText(context, "return later to edit again", Toast.LENGTH_SHORT).show()
+            true
+        }
+        view!!.instructions_view.text = recipe!!.instructions
+        Picasso.get().load(recipe!!.url).placeholder(R.mipmap.ic_launcher).into(view!!.recipe_image_view)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -356,8 +366,8 @@ class RecipeFragment: Fragment() {
                 }
                 view!!.button_edit_recipe.text = ""
                 if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
-                    view!!.button_return.height *= 2
-                    view!!.button_edit_recipe.height *= 2
+                    view.button_return.height *= 2
+                    view.button_edit_recipe.height *= 2
                 }
                 var contains = false
                 recipesRef.get().addOnSuccessListener {
@@ -365,17 +375,18 @@ class RecipeFragment: Fragment() {
                         val cur = Recipe.fromSnapshot(doc)
                         if(cur.favoriteOf == viewedBy.uid && cur.equals(r)) {
                             contains = true
+                            view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
                         }
                     }
                 }
-                view!!.button_edit_recipe.setOnLongClickListener {
+                view.button_edit_recipe.setOnLongClickListener {
                     if (contains) {
                         contains = false
-                        unFavorite(view!!, r)
+                        unFavorite(view, r)
                     }
                     else {
                         contains = true
-                        favorite(view!!, r)
+                        favorite(view, r)
                     }
                     true
                 }
