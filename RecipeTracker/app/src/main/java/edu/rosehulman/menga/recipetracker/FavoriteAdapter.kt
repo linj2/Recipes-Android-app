@@ -11,7 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot
 
 class FavoriteAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeSelectedListener, val user: FirebaseUser): RecyclerView.Adapter<RecipeViewHolder>() {
     val recipes = ArrayList<Recipe>()
-    val recipesRef = FirebaseFirestore.getInstance().collection(Constants.USERS_PATH)
+    val recipesRef = FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH)
 
     override fun onCreateViewHolder(parent: ViewGroup, index: Int): RecipeViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.row_recipe, parent, false)
@@ -19,7 +19,7 @@ class FavoriteAdapter(var context: Context, val listener: RecipeAdapter.OnRecipe
     }
 
     init {
-        recipesRef.whereEqualTo("favoriteOf", user.uid).get().addOnSuccessListener {
+        recipesRef.whereEqualTo(Constants.FAVORITE_OF, user.uid).get().addOnSuccessListener {
             for(doc in it.documents) {
                 val recipe = Recipe.fromSnapshot(doc)
                 var unique = true

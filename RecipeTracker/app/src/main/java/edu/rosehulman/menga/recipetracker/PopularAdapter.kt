@@ -14,7 +14,7 @@ class PopularAdapter(var context: Context, val listener: RecipeAdapter.OnRecipeS
 
     val recipeRef = FirebaseFirestore
         .getInstance()
-        .collection(Constants.USERS_PATH)
+        .collection(Constants.FAVORITE_PATH)
 
     fun getPopularRecipes() {
         recipeRef.get().addOnSuccessListener {
