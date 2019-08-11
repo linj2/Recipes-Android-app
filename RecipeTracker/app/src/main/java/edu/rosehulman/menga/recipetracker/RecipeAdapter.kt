@@ -30,14 +30,8 @@ class RecipeAdapter(var context: Context, val listener: OnRecipeSelectedListener
     }
 
     init {
-//        if(mine){
-//            query = picRef.whereEqualTo("recipe", recipe)
-//        }else{
-//            query = picRef.orderBy(Recipe.CREATION_KEY, Query.Direction.ASCENDING)
-//        }
         recipeRef
             .orderBy(Recipe.CREATION_KEY, Query.Direction.DESCENDING)
-//            .whereEqualTo("uid", uid)
             .addSnapshotListener { snapshot: QuerySnapshot?, exception: FirebaseFirestoreException? ->
             if (exception != null) {
                 Log.e(Constants.TAG, "Listen error: $exception")

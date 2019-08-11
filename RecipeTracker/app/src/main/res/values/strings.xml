@@ -28,4 +28,5 @@
     <string name="remove">Remove</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="delete">delete</string>
+    <string name="log_out">Log out</string>
 </resources>

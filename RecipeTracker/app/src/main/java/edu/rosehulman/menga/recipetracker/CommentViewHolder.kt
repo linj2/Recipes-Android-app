@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import kotlinx.android.synthetic.main.row_comment.*
 import kotlinx.android.synthetic.main.row_comment.view.*
 import kotlinx.android.synthetic.main.row_comment.view.comment
 
@@ -20,6 +19,7 @@ class CommentViewHolder: RecyclerView.ViewHolder{
             Log.d(Constants.TAG,"selecting comment at $adapterPosition")
             if((context as MainActivity).uid == adapter.comments[adapterPosition].uid) {
                 adapter.editCommentDialog(adapterPosition)
+                adapter.notifyDataSetChanged()
             }else{
                 adapter.authMessage()
             }

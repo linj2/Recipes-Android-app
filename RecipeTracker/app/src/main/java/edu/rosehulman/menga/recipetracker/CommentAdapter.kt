@@ -11,16 +11,16 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class CommentAdapter(var context: Context?, val user: FirebaseUser) : RecyclerView.Adapter<CommentViewHolder>() {
+class CommentAdapter(var context: Context?, val user: FirebaseUser, val recipeID:String?) : RecyclerView.Adapter<CommentViewHolder>() {
     val comments = ArrayList<Comment>()
     val commentRef = FirebaseFirestore
         .getInstance()
         .collection(Constants.COMMENT)
 
     init {
-        //TODO: add snapshot Listener for the comment ref
         commentRef
             .orderBy(Comment.CREATION_KEY, Query.Direction.DESCENDING)
+            .whereEqualTo("recipeId",recipeID)
             .addSnapshotListener { snapshot: QuerySnapshot?, exception: FirebaseFirestoreException? ->
                 if (exception != null) {
                     Log.e(Constants.TAG, "Listen error: $exception")
@@ -70,13 +70,17 @@ class CommentAdapter(var context: Context?, val user: FirebaseUser) : RecyclerVi
 
         val commentEditText = EditText(context)
         commentEditText.setText(comments[position].content)
+        builder.setView(commentEditText)
 
         builder.setPositiveButton(android.R.string.ok){_, _ ->
             val content = commentEditText.text.toString()
             edit(position,content)
+            notifyItemChanged(position)
         }
         builder.setNeutralButton(context?.getString(R.string.delete)){_,_ ->
             remove(position)
+            notifyDataSetChanged()
+            notifyItemRemoved(position)
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
