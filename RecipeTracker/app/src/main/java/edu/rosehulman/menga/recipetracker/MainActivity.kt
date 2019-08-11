@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(),
 {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    lateinit var user: FirebaseUser
+    var user: FirebaseUser? = null
     var uid: String = ""
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     lateinit var navView: BottomNavigationView
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(),
         //set main fragment as default page
         if (savedInstanceState == null && first) {
             //first = false
-            val fragment = PopularFragment.newInstance(user)
+            val fragment = PopularFragment.newInstance(user!!)
             val ft = supportFragmentManager.beginTransaction()
             ft.add(R.id.fragment_container, fragment)
             ft.commit()
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(),
         var switchTo: Fragment
         when (item.itemId) {
             R.id.nav_favorite -> {
-                switchTo = FavoriteFragment.newInstance(user)
+                switchTo = FavoriteFragment.newInstance(user!!)
                 val ft = supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, switchTo)
                 for (i in 0 until supportFragmentManager.backStackEntryCount) {
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(),
                 ft.commit()
             }
             R.id.nav_popular ->{
-                switchTo = PopularFragment.newInstance(user)
+                switchTo = PopularFragment.newInstance(user!!)
                 val ft = supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, switchTo)
                 for (i in 0 until supportFragmentManager.backStackEntryCount) {
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(),
                 ft.commit()
             }
             R.id.nav_me ->{
-                switchTo = MeFragment.newInstance(user)
+                switchTo = MeFragment.newInstance(user!!)
                 val ft = supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, switchTo)
                 for (i in 0 until supportFragmentManager.backStackEntryCount) {
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(),
                 ft.commit()
             }
             R.id.nav_search ->{
-                switchTo = SearchFragment.newInstance(user)
+                switchTo = SearchFragment.newInstance(user!!)
                 val ft = supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, switchTo)
                 for (i in 0 until supportFragmentManager.backStackEntryCount) {
@@ -130,15 +130,16 @@ class MainActivity : AppCompatActivity(),
 
     private fun initializeListeners() {
         authStateListener = FirebaseAuth.AuthStateListener { auth: FirebaseAuth ->
-            user = auth.currentUser!!
-            uid = user.uid
+            user = auth.currentUser
+
             Log.d(Constants.TAG, "In auth listener, user = $user")
             if (user != null) {
-                Log.d(Constants.TAG, "UID: ${user.uid}")
-                Log.d(Constants.TAG, "Name: ${user.displayName}")
-                Log.d(Constants.TAG, "Email: ${user.email}")
-                Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
-                Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
+                uid = user!!.uid
+                Log.d(Constants.TAG, "UID: ${user!!.uid}")
+                Log.d(Constants.TAG, "Name: ${user!!.displayName}")
+                Log.d(Constants.TAG, "Email: ${user!!.email}")
+                Log.d(Constants.TAG, "Phone: ${user!!.phoneNumber}")
+                Log.d(Constants.TAG, "Photo URL: ${user!!.photoUrl}")
                 switchToPopularFragment()
             } else {
                 switchToSplashFragment()
@@ -156,9 +157,10 @@ class MainActivity : AppCompatActivity(),
         return when (item.itemId) {
             R.id.action_logout -> {
                 // User chose the "Settings" item, show the app settings UI...
-                if (this::user.isInitialized) {
-                    Toast.makeText(this, "Already logged out", Toast.LENGTH_SHORT).show()
-                } else auth.signOut()
+//                if (this::user.isInitialized) {
+//                    Toast.makeText(this, "Already logged out", Toast.LENGTH_SHORT).show()
+//                } else
+                    auth.signOut()
                 true
             }
 
@@ -178,7 +180,7 @@ class MainActivity : AppCompatActivity(),
 
     private fun switchToPopularFragment() {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, PopularFragment.newInstance(user))
+        ft.replace(R.id.fragment_container, PopularFragment.newInstance(user!!))
         ft.commit()
     }
 

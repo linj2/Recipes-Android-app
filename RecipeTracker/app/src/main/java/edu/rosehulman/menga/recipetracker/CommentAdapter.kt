@@ -79,23 +79,24 @@ class CommentAdapter(var context: Context?, val user: FirebaseUser, val recipeID
         }
         builder.setNeutralButton(context?.getString(R.string.delete)){_,_ ->
             remove(position)
-            notifyDataSetChanged()
-            notifyItemRemoved(position)
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
     }
     private fun remove(position: Int){
         commentRef.document(comments[position].id).delete()
+        notifyItemRemoved(position)
     }
 
     private  fun edit(position: Int,content:String){
         comments[position].content = content
         commentRef.document(comments[position].id).set(comments[position])
+        notifyItemChanged(position)
     }
 
     fun add(comment: Comment) {
         commentRef.add(comment)
+        notifyItemInserted(0)
     }
 
     fun authMessage() {

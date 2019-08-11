@@ -19,7 +19,6 @@ class CommentViewHolder: RecyclerView.ViewHolder{
             Log.d(Constants.TAG,"selecting comment at $adapterPosition")
             if((context as MainActivity).uid == adapter.comments[adapterPosition].uid) {
                 adapter.editCommentDialog(adapterPosition)
-                adapter.notifyDataSetChanged()
             }else{
                 adapter.authMessage()
             }

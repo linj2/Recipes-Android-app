@@ -46,7 +46,7 @@ class CommentsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_comments, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.comment_recycler_view)
-        val adapter = CommentAdapter(context,(context as MainActivity).user,recipeID) //or just user
+        val adapter = CommentAdapter(context,(context as MainActivity).user!!,recipeID) //or just user
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
