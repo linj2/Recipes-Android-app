@@ -157,9 +157,10 @@ class MainActivity : AppCompatActivity(),
         return when (item.itemId) {
             R.id.action_logout -> {
                 // User chose the "Settings" item, show the app settings UI...
-                if (this::user.isInitialized) {
-                    Toast.makeText(this, getString(R.string.already_logged_out), Toast.LENGTH_SHORT).show()
-                } else auth.signOut()
+//                if (this::user.isInitialized) {
+//                    Toast.makeText(this, getString(R.string.already_logged_out), Toast.LENGTH_SHORT).show()
+//                } else
+                auth.signOut()
                 true
             }
 
