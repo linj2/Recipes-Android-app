@@ -63,7 +63,7 @@
                     android:layout_alignStart="@+id/button_return"
                     android:layout_alignEnd="@id/button_return"
                     android:layout_below="@id/button_return"
-                    android:text="@string/remove"
+                    android:text="@string/delete"
             />
             <Button
                     android:layout_width="wrap_content"

@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(),
     override fun showRecipe(recipe: Recipe, previous: String, viewedBy: FirebaseUser) {
         val fragment = RecipeFragment.newInstance(recipe, previous, viewedBy)
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, fragment).addToBackStack("recipe").commit()
+        ft.replace(R.id.fragment_container, fragment).addToBackStack(Constants.RECIPE).commit()
     }
 
 
@@ -157,10 +157,9 @@ class MainActivity : AppCompatActivity(),
         return when (item.itemId) {
             R.id.action_logout -> {
                 // User chose the "Settings" item, show the app settings UI...
-//                if (this::user.isInitialized) {
-//                    Toast.makeText(this, "Already logged out", Toast.LENGTH_SHORT).show()
-//                } else
-                    auth.signOut()
+                if (this::user.isInitialized) {
+                    Toast.makeText(this, getString(R.string.already_logged_out), Toast.LENGTH_SHORT).show()
+                } else auth.signOut()
                 true
             }
 

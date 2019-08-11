@@ -170,13 +170,10 @@ class MeFragment: Fragment() {
 
     private fun showPictureDialog() {
         val builder = AlertDialog.Builder(context!!)
-        builder.setTitle("Choose a photo source")
-        builder.setMessage("Would you like to take a new picture?\nOr choose an existing one?")
-        builder.setPositiveButton("Take Picture") { _, _ ->
-            launchCameraIntent()
-        }
+        builder.setTitle(context!!.resources.getString(R.string.picture_prompt))
+        builder.setMessage(context!!.resources.getString(R.string.show_pic_dialog_msg))
 
-        builder.setNegativeButton("Choose Picture") { _, _ ->
+        builder.setPositiveButton(context!!.resources.getString(R.string.choose_picture)) { _, _ ->
             launchChooseIntent()
         }
         builder.create().show()
@@ -184,31 +181,6 @@ class MeFragment: Fragment() {
 
     // Everything camera- and storage-related is from
     // https://developer.android.com/training/camera/photobasics
-    private fun launchCameraIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    // authority declared in manifest
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        context!!,
-                        "edu.rosehulman.recipetracker",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, RC_TAKE_PICTURE)
-                }
-            }
-        }
-    }
 
     @Throws(IOException::class)
     private fun createImageFile(): File {

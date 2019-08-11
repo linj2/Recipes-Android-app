@@ -31,6 +31,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 private const val RC_TAKE_PICTURE = 1
@@ -72,7 +73,7 @@ class RecipeFragment: Fragment() {
         }
 
         val layout = view.findViewById<RelativeLayout>(R.id.holder_buttons)
-        if (previous == Constants.SEARCH && viewedBy.uid != recipe?.uid) {
+        if ((previous == Constants.SEARCH || previous == Constants.POPULAR) && viewedBy.uid != recipe?.uid) {
             layout.removeView(view.findViewById(R.id.button_delete))
         }
         view.recipe_view_title.text = recipe?.title
@@ -97,26 +98,29 @@ class RecipeFragment: Fragment() {
                 .load(recipe?.url)
                 .into(view.recipe_image_view)
         }
-        if (previous != Constants.SEARCH || viewedBy.uid == recipe?.uid) {
+        if(previous == Constants.FAVORITE) {
+            view.button_delete.text = context!!.resources.getString(R.string.remove)
+        }
+        if ((previous != Constants.SEARCH && previous != Constants.POPULAR) || viewedBy.uid == recipe?.uid) {
             view.button_delete.setOnLongClickListener {
                 if (viewedBy.uid != recipe?.uid && previous != Constants.FAVORITE) {
-                    Toast.makeText(context, "You can't delete others' recipes!", Toast.LENGTH_SHORT).show()
-                } else if(viewedBy.uid != recipe?.uid && previous == Constants.FAVORITE) {
+                    Toast.makeText(context, context!!.resources.getString(R.string.remove_warning), Toast.LENGTH_SHORT).show()
+                } else if(previous == Constants.FAVORITE) {
                     val builder = AlertDialog.Builder(context!!)
                     builder
-                        .setMessage("Are you sure you want to delete this recipe?")
+                        .setMessage(context!!.resources.getString(R.string.remove_message))
                         .setPositiveButton(android.R.string.ok) { _, _ ->
-                            FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).document(recipe!!.id).delete()
+                            FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH).document(recipe!!.id).delete()
                             fragmentManager?.popBackStackImmediate()
                             storageRef.child(recipe!!.picId.toString()).delete()
                         }
                         .setNegativeButton(android.R.string.no, null)
-                    builder.create().show()
+                        .create().show()
                 }
                 else {
                     val builder = AlertDialog.Builder(context!!)
                     builder
-                        .setMessage("Are you sure you want to delete this recipe?")
+                        .setMessage(context!!.resources.getString(R.string.delete_prompt))
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             FirebaseFirestore.getInstance().collection(Constants.RECIPES_PATH).document(recipe!!.id)
                                 .delete()
@@ -156,7 +160,7 @@ class RecipeFragment: Fragment() {
                     ft.commit()
                 }
                 Constants.SEARCH -> {
-                    val switchTo = SearchFragment.newInstance(viewedBy!!)
+                    val switchTo = SearchFragment.newInstance(viewedBy)
                     val ft = activity!!.supportFragmentManager.beginTransaction()
                     ft.replace(R.id.fragment_container, switchTo)
                     activity!!.supportFragmentManager.popBackStackImmediate()
@@ -182,7 +186,7 @@ class RecipeFragment: Fragment() {
                     Picasso.get().load(recipe?.url).into(view.recipe_image)
                 }
                 builder.setPositiveButton(android.R.string.ok, null)
-                builder.setNeutralButton("+", null)
+                builder.setNeutralButton(context!!.resources.getString(R.string.plus), null)
                 builder.setNegativeButton(android.R.string.cancel, null)
                 view.recipe_image.setOnClickListener {
                     into = view.recipe_image
@@ -306,11 +310,11 @@ class RecipeFragment: Fragment() {
                 dialog.show()
             }
         }
-        else {//then viewedBy != recipe?.uid
+        else {//then viewedBy?.uid != recipe?.uid
             val r = recipe!!.clone()
             val recipes = ArrayList<Recipe>()
-            val recipesRef = FirebaseFirestore.getInstance().collection(Constants.USERS_PATH)
-            recipesRef.whereEqualTo("favoriteOf", viewedBy).get().addOnSuccessListener {
+            val recipesRef = FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH)
+            recipesRef.whereEqualTo(Constants.FAVORITE_OF, viewedBy).get().addOnSuccessListener {
                 for(doc in it.documents) {
                     val recipe = Recipe.fromSnapshot(doc)
                     var unique = true
@@ -332,8 +336,10 @@ class RecipeFragment: Fragment() {
                     }
                 }
                 view.button_edit_recipe.text = ""
-                view.button_return.height *= 2
-                view.button_edit_recipe.height *= 2
+                if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
+                    view.button_return.height *= 2
+                    view.button_edit_recipe.height *= 2
+                }
                 var contains = false
                 recipesRef.get().addOnSuccessListener {
                     for(doc in it.documents) {
@@ -361,13 +367,10 @@ class RecipeFragment: Fragment() {
 
     private fun showPictureDialog() {
         val builder = AlertDialog.Builder(context!!)
-        builder.setTitle("Choose a photo source")
-        builder.setMessage("Would you like to take a new picture?\nOr choose an existing one?")
-        builder.setPositiveButton("Take Picture") { _, _ ->
-            launchCameraIntent()
-        }
+        builder.setTitle(context!!.resources.getString(R.string.picture_prompt))
+        builder.setMessage(context!!.resources.getString(R.string.show_pic_dialog_msg))
 
-        builder.setNegativeButton("Choose Picture") { _, _ ->
+        builder.setPositiveButton(context!!.resources.getString(R.string.choose_picture)) { _, _ ->
             launchChooseIntent()
         }
         builder.create().show()
@@ -375,31 +378,7 @@ class RecipeFragment: Fragment() {
 
     // Everything camera- and storage-related is from
     // https://developer.android.com/training/camera/photobasics
-    private fun launchCameraIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    // authority declared in manifest
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        context!!,
-                        "edu.rosehulman.catchandkit",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, RC_TAKE_PICTURE)
-                }
-            }
-        }
-    }
+
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
@@ -470,16 +449,16 @@ class RecipeFragment: Fragment() {
     private fun favorite(view: View, r: Recipe) {
         view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_favorite)
         r.favoriteOf = viewedBy.uid
-        FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).add(r)
+        FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH).add(r)
     }
 
     private fun unFavorite(view: View, r: Recipe) {
         view.button_edit_recipe.setBackgroundResource(R.mipmap.ic_action_favorite)
-        FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).get().addOnSuccessListener {
+        FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH).get().addOnSuccessListener {
             for(doc in it.documents) {
                 val cur = Recipe.fromSnapshot(doc)
                 if(viewedBy.uid == cur.favoriteOf && r.equals(cur)) {
-                    FirebaseFirestore.getInstance().collection(Constants.USERS_PATH).document(doc.id).delete()
+                    FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH).document(doc.id).delete()
                     break
                 }
             }
@@ -525,17 +504,13 @@ class RecipeFragment: Fragment() {
                 if (task.isSuccessful) {
                     val downloadUri = task.result
                     url = downloadUri.toString()
-                    Log.d("picasso", "not loading")
                     if(into!=null) {
-                        Log.d("picasso", "started loading")
                         Picasso.get().load(url).into(into)
                     }
                 } else {
                     // Handle failures
                     // ...
                 }
-            }.addOnFailureListener {
-                Log.d("storage", "failed")
             }
             return null
         }

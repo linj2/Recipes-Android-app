@@ -100,6 +100,6 @@ class CommentAdapter(var context: Context?, val user: FirebaseUser, val recipeID
     }
 
     fun authMessage() {
-        Toast.makeText((context as MainActivity), "Sorry, you do not have the permission to edit this comment.",Toast.LENGTH_SHORT).show()
+        Toast.makeText((context as MainActivity), context!!.resources.getString(R.string.comment_warning),Toast.LENGTH_SHORT).show()
     }
 }
