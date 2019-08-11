@@ -97,9 +97,9 @@ class RecipeFragment: Fragment() {
             ft.commit()
         }
 
-        val layout = view!!.findViewById<RelativeLayout>(R.id.holder_buttons)
+        val layout = view.findViewById<LinearLayout>(R.id.holder_buttons)
         if ((previous == Constants.SEARCH || previous == Constants.POPULAR) && viewedBy.uid != recipe?.uid) {
-            layout.removeView(view!!.findViewById(R.id.button_delete))
+            layout.removeView(view.findViewById(R.id.button_delete))
         }
         view!!.recipe_view_title.text = recipe?.title
         val holder = view!!.ingredients_holder
@@ -158,48 +158,48 @@ class RecipeFragment: Fragment() {
                 true
             }
         }
-        view!!.button_return.setOnClickListener {
-            Log.d(Constants.TAG, "back to $previous")
-            when (previous) {
-                Constants.MY_RECIPES -> {
-                    val switchTo = MeFragment.newInstance(viewedBy)
-                    val ft = activity!!.supportFragmentManager.beginTransaction()
-                    ft.replace(R.id.fragment_container, switchTo)
-                    activity!!.supportFragmentManager.popBackStackImmediate()
-//                    ft.addToBackStack(Constants.MY_RECIPES)
-                    ft.commit()
-//                    nav_view.selectedItemId=R.id.nav_me
-                }
-                Constants.POPULAR -> {
-                    val switchTo = PopularFragment.newInstance(viewedBy)
-                    val ft = activity!!.supportFragmentManager.beginTransaction()
-                    ft.replace(R.id.fragment_container, switchTo)
-                    activity!!.supportFragmentManager.popBackStackImmediate()
-                    ft.commit()
-                }
-                Constants.FAVORITE -> {
-                    val switchTo = FavoriteFragment.newInstance(viewedBy)
-                    val ft = activity!!.supportFragmentManager.beginTransaction()
-                    ft.replace(R.id.fragment_container, switchTo)
-                    activity!!.supportFragmentManager.popBackStackImmediate()
-                    ft.commit()
-                }
-                Constants.SEARCH -> {
-                    val switchTo = SearchFragment.newInstance(viewedBy)
-                    val ft = activity!!.supportFragmentManager.beginTransaction()
-                    ft.replace(R.id.fragment_container, switchTo)
-                    activity!!.supportFragmentManager.popBackStackImmediate()
-                    ft.commit()
-                }
-                Constants.COMMENT -> {
-                    val switchTo = CommentsFragment.newInstance(viewedBy, recipe!!.id)
-                    val ft = activity!!.supportFragmentManager.beginTransaction()
-                    ft.replace(R.id.fragment_container, switchTo)
-                    activity!!.supportFragmentManager.popBackStackImmediate()
-                    ft.commit()
-                }
-            }
-        }
+//        view!!.button_return.setOnClickListener {
+//            Log.d(Constants.TAG, "back to $previous")
+//            when (previous) {
+//                Constants.MY_RECIPES -> {
+//                    val switchTo = MeFragment.newInstance(viewedBy)
+//                    val ft = activity!!.supportFragmentManager.beginTransaction()
+//                    ft.replace(R.id.fragment_container, switchTo)
+//                    activity!!.supportFragmentManager.popBackStackImmediate()
+////                    ft.addToBackStack(Constants.MY_RECIPES)
+//                    ft.commit()
+////                    nav_view.selectedItemId=R.id.nav_me
+//                }
+//                Constants.POPULAR -> {
+//                    val switchTo = PopularFragment.newInstance(viewedBy)
+//                    val ft = activity!!.supportFragmentManager.beginTransaction()
+//                    ft.replace(R.id.fragment_container, switchTo)
+//                    activity!!.supportFragmentManager.popBackStackImmediate()
+//                    ft.commit()
+//                }
+//                Constants.FAVORITE -> {
+//                    val switchTo = FavoriteFragment.newInstance(viewedBy)
+//                    val ft = activity!!.supportFragmentManager.beginTransaction()
+//                    ft.replace(R.id.fragment_container, switchTo)
+//                    activity!!.supportFragmentManager.popBackStackImmediate()
+//                    ft.commit()
+//                }
+//                Constants.SEARCH -> {
+//                    val switchTo = SearchFragment.newInstance(viewedBy)
+//                    val ft = activity!!.supportFragmentManager.beginTransaction()
+//                    ft.replace(R.id.fragment_container, switchTo)
+//                    activity!!.supportFragmentManager.popBackStackImmediate()
+//                    ft.commit()
+//                }
+//                Constants.COMMENT -> {
+//                    val switchTo = CommentsFragment.newInstance(viewedBy, recipe!!.id)
+//                    val ft = activity!!.supportFragmentManager.beginTransaction()
+//                    ft.replace(R.id.fragment_container, switchTo)
+//                    activity!!.supportFragmentManager.popBackStackImmediate()
+//                    ft.commit()
+//                }
+//            }
+//        }
         if(viewedBy.uid == recipe?.uid) {
             view!!.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
@@ -366,7 +366,7 @@ class RecipeFragment: Fragment() {
                 }
                 view!!.button_edit_recipe.text = ""
                 if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
-                    view.button_return.height *= 2
+//                    view.button_return.height *= 2
                     view.button_edit_recipe.height *= 2
                 }
                 var contains = false

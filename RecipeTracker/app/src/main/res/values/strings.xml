@@ -38,4 +38,5 @@
     <string name="comment_warning">Sorry, you do not have the permission to edit this comment.</string>
     <string name="already_logged_out">Already logged out</string>
     <string name="log_out">Log out</string>
+    <string name="instructions_string">Instructions</string>
 </resources>

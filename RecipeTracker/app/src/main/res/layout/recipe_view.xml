@@ -22,47 +22,42 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="200dp"
                 android:src="@mipmap/ic_launcher"
                 android:layout_centerHorizontal="true"
                 android:contentDescription="Placeholder for recipe image"
                 android:id="@+id/recipe_image_view"
         />
+                <!--android:maxHeight="200dp"-->
+        <!--/>-->
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/recipe_name"
-                android:layout_centerHorizontal="true"
                 android:id="@+id/recipe_view_title"
                 android:gravity="center_horizontal"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"
         />
-        <RelativeLayout
+        <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/holder_buttons"
                 android:gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/recipe_view_title"
         >
-            <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_return"
-                    android:text="@string/back"
-                    android:layout_toEndOf="@+id/button_edit_recipe"
-                    android:layout_marginEnd="10dp"
-            />
+            <!--<Button-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:id="@+id/button_return"-->
+                    <!--android:text="@string/back"-->
+                    <!--android:layout_toEndOf="@+id/button_edit_recipe"-->
+                    <!--android:layout_marginEnd="10dp"-->
+            <!--/>-->
             <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/button_delete"
-                    android:layout_alignStart="@+id/button_return"
-                    android:layout_alignEnd="@id/button_return"
-                    android:layout_below="@id/button_return"
                     android:text="@string/delete"
             />
             <Button
@@ -70,11 +65,12 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/button_edit_recipe"
                     android:text="@string/edit_recipe"
-                    android:layout_alignTop="@id/button_return"
+                    android:layout_alignTop="@id/button_delete"
                     android:layout_alignBottom="@id/button_delete"
+                    android:layout_toStartOf="@+id/button_delete"
                     android:layout_marginEnd="10dp"
             />
-        </RelativeLayout>
+        </LinearLayout>
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,17 +85,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/instructions_view"
-                android:layout_centerHorizontal="true"
-                android:text="Instructions"
-                android:layout_below="@+id/ingredients_holder"
+                android:text="@string/instructions_string"
         />
         <Button
                 android:id="@+id/Button_show_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/comment"
-                android:layout_below="@+id/instructions_view"
-                android:layout_centerHorizontal="true"
         />
     </LinearLayout>
 </ScrollView>
