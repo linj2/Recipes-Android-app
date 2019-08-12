@@ -52,6 +52,8 @@
                     android:id="@+id/button_delete"
                     android:text="@string/delete"
                     android:layout_weight="5"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:textColor="@android:color/white"
             />
         </LinearLayout>
 
@@ -103,6 +105,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/comment"
+                android:backgroundTint="@color/fui_transparent"
+                android:textColor="@android:color/white"
         />
     </LinearLayout>
 </ScrollView>

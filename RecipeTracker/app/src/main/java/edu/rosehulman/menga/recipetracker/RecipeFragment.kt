@@ -2,6 +2,7 @@ package edu.rosehulman.menga.recipetracker
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
@@ -156,6 +157,9 @@ class RecipeFragment: Fragment() {
             }
         }
         if(viewedBy.uid == recipe?.uid) {
+            view.button_edit_recipe.setTextColor(resources.getColor(android.R.color.white))
+            view.button_edit_recipe.backgroundTintList = resources.getColorStateList(R.color.fui_transparent)
+
             view.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
                 val editTextIds = ArrayList<Int>()
