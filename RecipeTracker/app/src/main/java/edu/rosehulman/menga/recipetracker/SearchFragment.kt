@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_search.view.*
 import com.google.firebase.database.FirebaseDatabase
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageButton
 import com.google.firebase.auth.FirebaseUser
 
 
@@ -67,7 +68,7 @@ class SearchFragment: Fragment() {
 //            }
 //            ft.commit()
 //        }
-        val searchButton = view.findViewById<Button>(R.id.button_execute_search)
+        val searchButton = view.findViewById<ImageButton>(R.id.button_execute_search)
         val searchBar = view.findViewById<EditText>(R.id.edit_text_search)
         searchButton.setOnClickListener {
 
