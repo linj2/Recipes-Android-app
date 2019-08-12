@@ -27,7 +27,7 @@ const val PREVIOUS = "previous"
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
-    SplashFragment.OnLoginButtonPressedListener,
+//    SplashFragment.OnLoginButtonPressedListener,
     RecipeAdapter.OnRecipeSelectedListener
 {
 
@@ -41,17 +41,10 @@ class MainActivity : AppCompatActivity(),
     private lateinit var fragment: Fragment
     private var currentFragment = Constants.POPULAR
 
-    var first = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-//        val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                                                 ViewGroup.LayoutParams.WRAP_CONTENT)
-//        params.addRule(RelativeLayout.BELOW, toolbar.id)
-//        fragment_container.layoutParams = params
         setSupportActionBar(toolbar)
         user = auth.currentUser
         initializeListeners()
@@ -61,19 +54,6 @@ class MainActivity : AppCompatActivity(),
         //add selected listener for bottom navigation view
         navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(this)
-
-        //set main fragment as default page
-//        if (savedInstanceState == null) {
-//            fragment = PopularFragment.newInstance(user!!)
-//            when (currentFragment) {
-//                Constants.SEARCH -> fragment = SearchFragment.newInstance(user!!)
-//                Constants.MY_RECIPES -> fragment = MeFragment.newInstance(user!!)
-//                Constants.FAVORITE -> fragment = FavoriteFragment.newInstance(user!!)
-//            }
-//            val ft = supportFragmentManager.beginTransaction()
-//            ft.add(R.id.fragment_container, fragment)
-//            ft.commit()
-//        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -167,7 +147,7 @@ class MainActivity : AppCompatActivity(),
                 Log.d(Constants.TAG, "Photo URL: ${user!!.photoUrl}")
                 switchToPopularFragment()
             } else {
-                switchToSplashFragment()
+                launchLoginUI()
             }
         }
     }
@@ -208,9 +188,9 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    override fun onLoginButtonPressed() {
-        launchLoginUI()
-    }
+//    override fun onLoginButtonPressed() {
+//        launchLoginUI()
+//    }
 
     private fun launchLoginUI() {
         // Choose authentication providers
@@ -223,6 +203,7 @@ class MainActivity : AppCompatActivity(),
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
             .setLogo(R.mipmap.ic_launcher)
+            .setTheme(R.style.AppTheme)
             .build()
 
         // Create and launch sign-in intent
