@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,6 @@ class PopularFragment : Fragment() {
     private var columns: Int = 2
     private var listener: RecipeAdapter.OnRecipeSelectedListener? = null
     lateinit var adapter: PopularAdapter
-    private lateinit var rootView: RecyclerView
 
     companion object {
         fun newInstance(user: FirebaseUser) =
@@ -58,17 +58,8 @@ class PopularFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_popular, container, false)
         view.recycler_view.adapter = adapter
         adapter.getPopularRecipes()
-        view.recycler_view.layoutManager = GridLayoutManager(context, columns)
+        view.recycler_view.layoutManager = StaggeredGridLayoutManager(columns,StaggeredGridLayoutManager.VERTICAL)
         view.recycler_view.setHasFixedSize(true)
-//        view.button_return.setOnClickListener {
-//            val switchTo = HomeFragment.newInstance(uid!!)
-//            val ft = activity!!.supportFragmentManager.beginTransaction()
-//            ft.replace(R.id.fragment_container, switchTo)
-//            for (i in 0 until activity!!.supportFragmentManager.backStackEntryCount) {
-//                activity!!.supportFragmentManager.popBackStackImmediate()
-//            }
-//            ft.commit()
-//        }
         return view
     }
 }
