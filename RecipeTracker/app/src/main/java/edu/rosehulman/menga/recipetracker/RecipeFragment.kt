@@ -119,6 +119,7 @@ class RecipeFragment: Fragment() {
         if(recipe?.picId != (-1).toLong()) {
             Picasso.get()
                 .load(recipe?.url)
+                .fit()
                 .into(view.recipe_image_view)
         }
         if(previous == Constants.FAVORITE) {
@@ -167,7 +168,7 @@ class RecipeFragment: Fragment() {
                 val ret = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
                 builder.setView(ret)
                 if(recipe?.picId!=(-1).toLong()) {
-                    Picasso.get().load(recipe?.url).into(ret.recipe_image)
+                    Picasso.get().load(recipe?.url).fit().into(ret.recipe_image)
                 }
                 builder.setPositiveButton(android.R.string.ok, null)
                 builder.setNeutralButton(context!!.resources.getString(R.string.plus), null)
@@ -494,7 +495,7 @@ class RecipeFragment: Fragment() {
                     val downloadUri = task.result
                     url = downloadUri.toString()
                     if(into!=null) {
-                        Picasso.get().load(url).into(into)
+                        Picasso.get().load(url).fit().into(into)
                     }
                 } else {
                     // Handle failures

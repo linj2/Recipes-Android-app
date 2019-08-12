@@ -16,10 +16,12 @@
             android:orientation="vertical"
     >
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="323dp"
+                android:layout_height="229dp"
                 android:src="@mipmap/ic_launcher"
                 android:id="@+id/recipe_image_view"
+                android:background="@drawable/image_border"
+                android:cropToPadding="true"
         />
 
         <TextView
@@ -98,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/instructions_view"
                 android:text="@string/instructions_string"
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="15dp"
         />
         <Button
                 android:id="@+id/Button_show_comment"
