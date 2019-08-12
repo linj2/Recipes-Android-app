@@ -306,7 +306,7 @@ class RecipeFragment: Fragment() {
             val r = recipe!!.clone()
             val recipes = ArrayList<Recipe>()
             val recipesRef = FirebaseFirestore.getInstance().collection(Constants.FAVORITE_PATH)
-            recipesRef.whereEqualTo(Constants.FAVORITE_OF, viewedBy).get().addOnSuccessListener {
+            recipesRef.whereEqualTo(Constants.FAVORITE_OF, viewedBy.uid).get().addOnSuccessListener {
                 for(doc in it.documents) {
                     val recipe = Recipe.fromSnapshot(doc)
                     var unique = true
@@ -330,7 +330,6 @@ class RecipeFragment: Fragment() {
                 view.button_edit_recipe.text = ""
                 if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
                     view.button_edit_recipe.height *= 2
-//                    view.button_delete.height *= 2
                 }
                 if(previous == Constants.FAVORITE) {
                     view.button_edit_recipe.height *= 2

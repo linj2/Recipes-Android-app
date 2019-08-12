@@ -72,6 +72,7 @@ class CommentsFragment : Fragment() {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
             view.clearFocus()
         }
+        adapter.update()
         return view
     }
 }
