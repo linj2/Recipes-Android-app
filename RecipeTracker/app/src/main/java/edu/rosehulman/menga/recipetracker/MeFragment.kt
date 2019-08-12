@@ -152,6 +152,7 @@ class MeFragment: Fragment() {
                     into = null
                     picId = -1
                     url = ""
+                    //adapter.update() //issue with listener not updating immediately and instead waiting for button click
                     it.dismiss()
                 }
                 val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
