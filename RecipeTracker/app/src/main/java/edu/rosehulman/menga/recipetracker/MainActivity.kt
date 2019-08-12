@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(),
 //        params.addRule(RelativeLayout.BELOW, toolbar.id)
 //        fragment_container.layoutParams = params
         setSupportActionBar(toolbar)
-        user = auth.currentUser!!
+        user = auth.currentUser
         initializeListeners()
 
         FirebaseApp.initializeApp(this)

@@ -21,7 +21,7 @@ data class Recipe(var title: String = "",
     var creation: Timestamp? = null
 
     fun clone(): Recipe {
-        return Recipe(title, ingredients, instructions, uid)
+        return Recipe(title, ingredients, instructions, uid, "", picId, url)
     }
 
     fun equals(other: Recipe): Boolean {

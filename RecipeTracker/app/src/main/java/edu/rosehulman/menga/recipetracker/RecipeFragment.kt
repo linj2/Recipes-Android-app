@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
+import kotlinx.android.synthetic.main.recipe_view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -116,7 +117,11 @@ class RecipeFragment: Fragment() {
 //        view.instructions_view.layoutParams = instructionsParams
 
         view.instructions_view.text = recipe?.instructions
-        if(recipe?.picId != (-1).toLong()) {
+        if(recipe?.picId == (-1).toLong()) {
+
+        }
+        else {
+            Log.d("mmmmmmmmmmmmmm", "nnnnnnnnnnnnnnnnnn")
             Picasso.get()
                 .load(recipe?.url)
                 .fit()
@@ -125,6 +130,7 @@ class RecipeFragment: Fragment() {
         if(previous == Constants.FAVORITE) {
             view.button_delete.text = context!!.resources.getString(R.string.remove)
         }
+        else(Log.d(previous, Constants.MY_RECIPES))
         if ((previous != Constants.SEARCH && previous != Constants.POPULAR) || viewedBy.uid == recipe?.uid) {
             view.button_delete.setOnLongClickListener {
                 if ((viewedBy.uid != recipe?.uid && previous != Constants.FAVORITE) || viewedBy.uid != recipe?.uid) {
@@ -167,7 +173,8 @@ class RecipeFragment: Fragment() {
                 // Set options
                 val ret = LayoutInflater.from(context).inflate(R.layout.dialog_edit_recipe, null, false)
                 builder.setView(ret)
-                if(recipe?.picId!=(-1).toLong()) {
+                if(recipe?.url!="") {
+
                     Picasso.get().load(recipe?.url).fit().into(ret.recipe_image)
                 }
                 builder.setPositiveButton(android.R.string.ok, null)
@@ -326,8 +333,12 @@ class RecipeFragment: Fragment() {
                 }
                 view.button_edit_recipe.text = ""
                 if(previous == Constants.POPULAR || previous == Constants.SEARCH) {
-//                    view.button_return.height *= 2
-                    view.button_edit_recipe.height *= 1
+                    view.button_edit_recipe.height *= 2
+//                    view.button_delete.height *= 2
+                }
+                if(previous == Constants.FAVORITE) {
+                    view.button_edit_recipe.height *= 2
+                    view.button_delete.height *= 2
                 }
                 var contains = false
                 recipesRef.get().addOnSuccessListener {
@@ -351,6 +362,10 @@ class RecipeFragment: Fragment() {
                     true
                 }
             }
+        }
+        if(previous == Constants.MY_RECIPES) {
+            view.button_edit_recipe.height = 2
+            view.button_delete.height *= 2
         }
         return view
     }
