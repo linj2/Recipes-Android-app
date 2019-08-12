@@ -40,4 +40,6 @@
     <string name="log_out">Log out</string>
     <string name="instructions_string">Instructions</string>
     <string name="edit_warning">Return later to edit again</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="directions">Directions</string>
 </resources>

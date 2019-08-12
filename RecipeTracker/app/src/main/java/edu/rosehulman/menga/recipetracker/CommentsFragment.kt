@@ -63,6 +63,7 @@ class CommentsFragment : Fragment() {
             }else {
                 val comment = Comment(content, user.uid, recipeID, user.displayName!!)
                 adapter.add(comment)
+                adapter.update()
                 commentEditText.text.clear()
             }
 

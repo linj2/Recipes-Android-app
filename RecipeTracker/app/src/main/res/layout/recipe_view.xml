@@ -5,15 +5,13 @@
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
         android:background="@color/cardBackground"
+        android:layout_gravity="center"
         android:padding="24dp"
 >
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:orientation="vertical"
     >
@@ -56,6 +54,20 @@
                     android:layout_weight="5"
             />
         </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ingredients"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="5dp"
+            />
+        </LinearLayout>
+
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,11 +77,26 @@
         >
 
         </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/directions"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginVertical="5dp"
+            />
+        </LinearLayout>
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/instructions_view"
                 android:text="@string/instructions_string"
+                android:layout_marginHorizontal="10dp"
         />
         <Button
                 android:id="@+id/Button_show_comment"
