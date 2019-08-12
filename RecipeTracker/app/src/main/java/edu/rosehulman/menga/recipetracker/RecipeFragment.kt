@@ -2,7 +2,6 @@ package edu.rosehulman.menga.recipetracker
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
@@ -24,7 +23,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_edit_recipe.view.*
-import kotlinx.android.synthetic.main.recipe_view.*
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -132,7 +130,7 @@ class RecipeFragment: Fragment() {
         }
         else(Log.d(previous, Constants.MY_RECIPES))
         if ((previous != Constants.SEARCH && previous != Constants.POPULAR) || viewedBy.uid == recipe?.uid) {
-            view.button_delete.setOnLongClickListener {
+            view.button_delete.setOnClickListener {
                 if ((viewedBy.uid != recipe?.uid && previous != Constants.FAVORITE) || viewedBy.uid != recipe?.uid) {
                     Toast.makeText(context, context!!.resources.getString(R.string.remove_warning), Toast.LENGTH_SHORT).show()
                 } else if(previous == Constants.FAVORITE) {
@@ -160,13 +158,11 @@ class RecipeFragment: Fragment() {
                         .setNegativeButton(android.R.string.no, null)
                     builder.create().show()
                 }
-                true
             }
         }
         if(viewedBy.uid == recipe?.uid) {
             view.button_edit_recipe.setTextColor(resources.getColor(android.R.color.white))
             view.button_edit_recipe.backgroundTintList = resources.getColorStateList(R.color.fui_transparent)
-
             view.button_edit_recipe.setOnClickListener {
                 val builder = AlertDialog.Builder(context!!)
                 val editTextIds = ArrayList<Int>()
